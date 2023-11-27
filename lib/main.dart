@@ -1,221 +1,349 @@
+// Copyright 2017 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
-void main() => runApp(MyApp());
+import 'snake.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Accelerometer',
+      title: 'Sensors Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0x9f4376f8),
       ),
-      home: MyHomePage(title: 'Accelerometer'),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // color of the circle
-  Color color = Colors.greenAccent;
+  static const Duration _ignoreDuration = Duration(milliseconds: 20);
 
-  // event returned from accelerometer stream
-  AccelerometerEvent? event;
+  static const int _snakeRows = 20;
+  static const int _snakeColumns = 20;
+  static const double _snakeCellSize = 10.0;
 
-  // hold a refernce to these, so that they can be disposed
-  Timer? timer;
-  StreamSubscription? accel;
+  UserAccelerometerEvent? _userAccelerometerEvent;
+  AccelerometerEvent? _accelerometerEvent;
+  GyroscopeEvent? _gyroscopeEvent;
+  MagnetometerEvent? _magnetometerEvent;
 
-  // positions and count
-  double top = 125;
-  double left = 0.0;
-  int count = 0;
+  DateTime? _userAccelerometerUpdateTime;
+  DateTime? _accelerometerUpdateTime;
+  DateTime? _gyroscopeUpdateTime;
+  DateTime? _magnetometerUpdateTime;
 
-  // variables for screen size
-  double width = 0.0;
-  double height = 0.0;
+  int? _userAccelerometerLastInterval;
+  int? _accelerometerLastInterval;
+  int? _gyroscopeLastInterval;
+  int? _magnetometerLastInterval;
+  final _streamSubscriptions = <StreamSubscription<dynamic>>[];
 
-  setColor(AccelerometerEvent event) {
-    // Calculate Left
-    double x = ((event.x * 12) + ((width - 100) / 2));
-    // Calculate Top
-    double y = event.y * 12 + 125;
+  Duration sensorInterval = SensorInterval.normalInterval;
 
-    // find the difference from the target position
-    var xDiff = x.abs() - ((width - 100) / 2);
-    var yDiff = y.abs() - 125;
-
-    // check if the circle is centered, currently allowing a buffer of 3 to make centering easier
-    if (xDiff.abs() < 3 && yDiff.abs() < 3) {
-      // set the color and increment count
-      setState(() {
-        color = Colors.greenAccent;
-        count += 1;
-      });
-    } else {
-      // set the color and restart count
-      setState(() {
-        color = Colors.red;
-        count = 0;
-      });
-    }
-  }
-
-  setPosition(AccelerometerEvent event) {
-    if (event == null) {
-      return;
-    }
-
-    // When x = 0 it should be centered horizontally
-    // The left positin should equal (width - 100) / 2
-    // The greatest absolute value of x is 10, multipling it by 12 allows the left position to move a total of 120 in either direction.
-    setState(() {
-      left = ((event.x * 12) + ((width - 100) / 2));
-    });
-
-    // When y = 0 it should have a top position matching the target, which we set at 125
-    setState(() {
-      top = event.y * 12 + 125;
-    });
-  }
-
-  startTimer() {
-    // if the accelerometer subscription hasn't been created, go ahead and create it
-    if (accel == null) {
-      accel = accelerometerEvents.listen((AccelerometerEvent eve) {
-        setState(() {
-          event = eve;
-        });
-      });
-    } else {
-      // it has already ben created so just resume it
-      accel?.resume();
-    }
-
-    // Accelerometer events come faster than we need them so a timer is used to only proccess them every 200 milliseconds
-    if (timer == null || !timer!.isActive) {
-      timer = Timer.periodic(Duration(milliseconds: 200), (_) {
-        // if count has increased greater than 3 call pause timer to handle success
-        if (count > 3) {
-          pauseTimer();
-        } else {
-          // proccess the current event
-          setColor(event!);
-          setPosition(event!);
-        }
-      });
-    }
-  }
-
-  pauseTimer() {
-    // stop the timer and pause the accelerometer stream
-    timer?.cancel();
-    accel?.pause();
-
-    // set the success color and reset the count
-    setState(() {
-      count = 0;
-      color = Colors.green;
-    });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sensors Plus Example'),
+        elevation: 4,
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Center(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1.0, color: Colors.black38),
+              ),
+              child: SizedBox(
+                height: _snakeRows * _snakeCellSize,
+                width: _snakeColumns * _snakeCellSize,
+                child: Snake(
+                  rows: _snakeRows,
+                  columns: _snakeColumns,
+                  cellSize: _snakeCellSize,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Table(
+              columnWidths: const {
+                0: FlexColumnWidth(4),
+                4: FlexColumnWidth(2),
+              },
+              children: [
+                const TableRow(
+                  children: [
+                    SizedBox.shrink(),
+                    Text('X'),
+                    Text('Y'),
+                    Text('Z'),
+                    Text('Interval'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('UserAccelerometer'),
+                    ),
+                    Text(_userAccelerometerEvent?.x.toStringAsFixed(1) ?? '?'),
+                    Text(_userAccelerometerEvent?.y.toStringAsFixed(1) ?? '?'),
+                    Text(_userAccelerometerEvent?.z.toStringAsFixed(1) ?? '?'),
+                    Text(
+                        '${_userAccelerometerLastInterval?.toString() ?? '?'} ms'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('Accelerometer'),
+                    ),
+                    Text(_accelerometerEvent?.x.toStringAsFixed(1) ?? '?'),
+                    Text(_accelerometerEvent?.y.toStringAsFixed(1) ?? '?'),
+                    Text(_accelerometerEvent?.z.toStringAsFixed(1) ?? '?'),
+                    Text('${_accelerometerLastInterval?.toString() ?? '?'} ms'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('Gyroscope'),
+                    ),
+                    Text(_gyroscopeEvent?.x.toStringAsFixed(1) ?? '?'),
+                    Text(_gyroscopeEvent?.y.toStringAsFixed(1) ?? '?'),
+                    Text(_gyroscopeEvent?.z.toStringAsFixed(1) ?? '?'),
+                    Text('${_gyroscopeLastInterval?.toString() ?? '?'} ms'),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('Magnetometer'),
+                    ),
+                    Text(_magnetometerEvent?.x.toStringAsFixed(1) ?? '?'),
+                    Text(_magnetometerEvent?.y.toStringAsFixed(1) ?? '?'),
+                    Text(_magnetometerEvent?.z.toStringAsFixed(1) ?? '?'),
+                    Text('${_magnetometerLastInterval?.toString() ?? '?'} ms'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Update Interval:'),
+              SegmentedButton(
+                segments: [
+                  ButtonSegment(
+                    value: SensorInterval.gameInterval,
+                    label: Text('Game\n'
+                        '(${SensorInterval.gameInterval.inMilliseconds}ms)'),
+                  ),
+                  ButtonSegment(
+                    value: SensorInterval.uiInterval,
+                    label: Text('UI\n'
+                        '(${SensorInterval.uiInterval.inMilliseconds}ms)'),
+                  ),
+                  ButtonSegment(
+                    value: SensorInterval.normalInterval,
+                    label: Text('Normal\n'
+                        '(${SensorInterval.normalInterval.inMilliseconds}ms)'),
+                  ),
+                  const ButtonSegment(
+                    value: Duration(milliseconds: 500),
+                    label: Text('500ms'),
+                  ),
+                  const ButtonSegment(
+                    value: Duration(seconds: 1),
+                    label: Text('1s'),
+                  ),
+                ],
+                selected: {sensorInterval},
+                showSelectedIcon: false,
+                onSelectionChanged: (value) {
+                  setState(() {
+                    sensorInterval = value.first;
+                    userAccelerometerEventStream(
+                        samplingPeriod: sensorInterval);
+                    accelerometerEventStream(samplingPeriod: sensorInterval);
+                    gyroscopeEventStream(samplingPeriod: sensorInterval);
+                    magnetometerEventStream(samplingPeriod: sensorInterval);
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void dispose() {
-    timer?.cancel();
-    accel?.cancel();
     super.dispose();
+    for (final subscription in _streamSubscriptions) {
+      subscription.cancel();
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    // get the width and height of the screen
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+  void initState() {
+    super.initState();
+    _streamSubscriptions.add(
+      userAccelerometerEventStream(samplingPeriod: sensorInterval).listen(
+        (UserAccelerometerEvent event) {
+          final now = DateTime.now();
+          setState(() {
+            _userAccelerometerEvent = event;
+            if (_userAccelerometerUpdateTime != null) {
+              final interval = now.difference(_userAccelerometerUpdateTime!);
+              if (interval > _ignoreDuration) {
+                _userAccelerometerLastInterval = interval.inMilliseconds;
+              }
+            }
+          });
+          _userAccelerometerUpdateTime = now;
+        },
+        onError: (e) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  title: Text("Sensor Not Found"),
+                  content: Text(
+                      "It seems that your device doesn't support User Accelerometer Sensor"),
+                );
+              });
+        },
+        cancelOnError: true,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('Keep the circle in the center for 1 second'),
-          ),
-          Stack(
-            children: [
-              // This empty container is given a width and height to set the size of the stack
-              Container(
-                height: height / 2,
-                width: width,
-              ),
-
-              // Create the outer target circle wrapped in a Position
-              Positioned(
-                // positioned 50 from the top of the stack
-                // and centered horizontally, left = (ScreenWidth - Container width) / 2
-                top: 50,
-                left: (width - 250) / 2,
-                child: Container(
-                  height: 250,
-                  width: 250,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.red, width: 2.0),
-                    borderRadius: BorderRadius.circular(125),
-                  ),
-                ),
-              ),
-              // This is the colored circle that will be moved by the accelerometer
-              // the top and left are variables that will be set
-              Positioned(
-                top: top,
-                left: left ?? (width - 100) / 2,
-                // the container has a color and is wrappeed in a ClipOval to make it round
-                child: ClipOval(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    color: color,
-                  ),
-                ),
-              ),
-              // inner target circle wrapped in a Position
-              Positioned(
-                top: 125,
-                left: (width - 100) / 2,
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.green, width: 2.0),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Text('x: ${(event?.x ?? 0).toStringAsFixed(3)}'),
-          Text('y: ${(event?.y ?? 0).toStringAsFixed(3)}'),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: ElevatedButton(
-              onPressed: startTimer,
-              child: Text('Begin'),
-            ),
-          )
-        ],
+    );
+    _streamSubscriptions.add(
+      accelerometerEventStream(samplingPeriod: sensorInterval).listen(
+        (AccelerometerEvent event) {
+          final now = DateTime.now();
+          setState(() {
+            _accelerometerEvent = event;
+            if (_accelerometerUpdateTime != null) {
+              final interval = now.difference(_accelerometerUpdateTime!);
+              if (interval > _ignoreDuration) {
+                _accelerometerLastInterval = interval.inMilliseconds;
+              }
+            }
+          });
+          _accelerometerUpdateTime = now;
+        },
+        onError: (e) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  title: Text("Sensor Not Found"),
+                  content: Text(
+                      "It seems that your device doesn't support Accelerometer Sensor"),
+                );
+              });
+        },
+        cancelOnError: true,
+      ),
+    );
+    _streamSubscriptions.add(
+      gyroscopeEventStream(samplingPeriod: sensorInterval).listen(
+        (GyroscopeEvent event) {
+          final now = DateTime.now();
+          setState(() {
+            _gyroscopeEvent = event;
+            if (_gyroscopeUpdateTime != null) {
+              final interval = now.difference(_gyroscopeUpdateTime!);
+              if (interval > _ignoreDuration) {
+                _gyroscopeLastInterval = interval.inMilliseconds;
+              }
+            }
+          });
+          _gyroscopeUpdateTime = now;
+        },
+        onError: (e) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  title: Text("Sensor Not Found"),
+                  content: Text(
+                      "It seems that your device doesn't support Gyroscope Sensor"),
+                );
+              });
+        },
+        cancelOnError: true,
+      ),
+    );
+    _streamSubscriptions.add(
+      magnetometerEventStream(samplingPeriod: sensorInterval).listen(
+        (MagnetometerEvent event) {
+          final now = DateTime.now();
+          setState(() {
+            _magnetometerEvent = event;
+            if (_magnetometerUpdateTime != null) {
+              final interval = now.difference(_magnetometerUpdateTime!);
+              if (interval > _ignoreDuration) {
+                _magnetometerLastInterval = interval.inMilliseconds;
+              }
+            }
+          });
+          _magnetometerUpdateTime = now;
+        },
+        onError: (e) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  title: Text("Sensor Not Found"),
+                  content: Text(
+                      "It seems that your device doesn't support Magnetometer Sensor"),
+                );
+              });
+        },
+        cancelOnError: true,
       ),
     );
   }
