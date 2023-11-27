@@ -158,17 +158,6 @@ file:///Users/duy.maid/.pub-cache/hosted/pub.dev/collection-1.17.2/lib/src/union
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/collection-1.17.2/lib/src/unmodifiable_wrappers.dart
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/collection-1.17.2/lib/src/utils.dart
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/collection-1.17.2/lib/src/wrappers.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.1/lib/device_info_plus.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.1/lib/src/device_info_plus_web.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.1/lib/src/model/android_device_info.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.1/lib/src/model/ios_device_info.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.1/lib/src/model/linux_device_info.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.1/lib/src/model/macos_device_info.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.1/lib/src/model/web_browser_info.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus-9.1.1/lib/src/model/windows_device_info.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus_platform_interface-7.0.0/lib/device_info_plus_platform_interface.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus_platform_interface-7.0.0/lib/method_channel/method_channel_device_info.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/device_info_plus_platform_interface-7.0.0/lib/model/base_device_info.dart
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/fake_async-1.3.1/lib/fake_async.dart
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/firebase_core-2.23.0/lib/firebase_core.dart
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/firebase_core-2.23.0/lib/src/firebase.dart
@@ -406,7 +395,6 @@ file:///Users/duy.maid/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib/src/vecto
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib/src/vector_math_64/vector3.dart
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib/src/vector_math_64/vector4.dart
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/vector_math-2.1.4/lib/vector_math_64.dart
-file:///Users/duy.maid/.pub-cache/hosted/pub.dev/vibration-1.8.3/lib/vibration.dart
 file:///Users/duy.maid/WorkSpace/noel2023/.dart_tool/flutter_build/85ab8c7203ebc3f82a56dfc9e080c489/app.dill
 file:///Users/duy.maid/WorkSpace/noel2023/.dart_tool/flutter_build/85ab8c7203ebc3f82a56dfc9e080c489/main.dart
 file:///Users/duy.maid/WorkSpace/noel2023/.dart_tool/flutter_build/85ab8c7203ebc3f82a56dfc9e080c489/web_plugin_registrant.dart
