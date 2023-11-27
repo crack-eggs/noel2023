@@ -50,50 +50,77 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>  with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   int _count = 0;
-
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _controller = AnimationController(
+  //     vsync: this,
+  //     duration: const Duration(milliseconds: 500),
+  //   );
+  //   ShakeDetector detector = ShakeDetector.autoStart(
+  //       onPhoneShake: () {
+  //         // Do stuff on phone shake
+  //         _count++;
+  //         setState(() {
+  //         });
+  //       }
+  //   );
+  //   detector.startListening();
+  // }
+  //
+  //
+  //
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Column(
+  //     children: [
+  //       Text(_count.toString()),
+  //       SizedBox(
+  //         width: 300 ,
+  //         height: 300,
+  //         child: RotationTransition(
+  //           turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
+  //           child: GestureDetector(onTap:(){
+  //             print('_MyHomePageState.build');
+  //                 FirebaseFirestore.instance.collection('test').add({"test":"test"});
+  //           },child: const Icon(Icons.egg_outlined, size: 300)),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   _controller.dispose();
+  //   super.dispose();
+  // }
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
     ShakeDetector detector = ShakeDetector.autoStart(
-        onPhoneShake: () {
-          // Do stuff on phone shake
-          _count++;
-          setState(() {
-          });
-        }
+      onPhoneShake: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Shake!'),
+          ),
+        );
+        // Do stuff on phone shake
+      },
+      minimumShakeCount: 1,
+      shakeSlopTimeMS: 500,
+      shakeCountResetTime: 3000,
+      shakeThresholdGravity: 2.7,
     );
-    detector.startListening();
+
+    // To close: detector.stopListening();
+    // ShakeDetector.waitForStart() waits for user to call detector.startListening();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(_count.toString()),
-        SizedBox(
-          width: 300 ,
-          height: 300,
-          child: RotationTransition(
-            turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
-            child: GestureDetector(onTap:(){
-              print('_MyHomePageState.build');
-                  FirebaseFirestore.instance.collection('test').add({"test":"test"});
-            },child: const Icon(Icons.egg_outlined, size: 300)),
-          ),
-        ),
-      ],
-    );
+    return const Scaffold();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 }
