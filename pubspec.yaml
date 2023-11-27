@@ -37,7 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   cloud_firestore:
   firebase_core_web:
-  shake:
+  vibration:
+  sensors_plus:
 
 dev_dependencies:
   flutter_test:
