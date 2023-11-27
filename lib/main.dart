@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shake/shake.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +49,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>  with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  int _count = 0;
 
   @override
   void initState() {
@@ -56,16 +58,36 @@ class _MyHomePageState extends State<MyHomePage>  with SingleTickerProviderState
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
+    ShakeDetector detector = ShakeDetector.autoStart(
+        onPhoneShake: () {
+          // Do stuff on phone shake
+          _count++;
+          setState(() {
+          });
+        }
+    );
+    detector.startListening();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
-      child: GestureDetector(onTap:(){
-        print('_MyHomePageState.build');
-            FirebaseFirestore.instance.collection('test').add({"test":"test"});
-      },child: const Icon(Icons.egg_outlined, size: 300)),
+    return Column(
+      children: [
+        Text(_count.toString()),
+        SizedBox(
+          width: 300 ,
+          height: 300,
+          child: RotationTransition(
+            turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
+            child: GestureDetector(onTap:(){
+              print('_MyHomePageState.build');
+                  FirebaseFirestore.instance.collection('test').add({"test":"test"});
+            },child: const Icon(Icons.egg_outlined, size: 300)),
+          ),
+        ),
+      ],
     );
   }
 

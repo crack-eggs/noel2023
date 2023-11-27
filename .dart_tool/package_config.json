@@ -122,6 +122,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "logging",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/logging-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "matcher",
       "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/matcher-0.12.16",
       "packageUri": "lib/",
@@ -150,6 +156,30 @@
       "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.7",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "sensors_plus",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/sensors_plus-1.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "sensors_plus_platform_interface",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/sensors_plus_platform_interface-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "sensors_plus_web",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/sensors_plus_web-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "shake",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/shake-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "sky_engine",
@@ -212,7 +242,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-11-27T07:49:14.053368Z",
+  "generated": "2023-11-27T08:56:39.770387Z",
   "generator": "pub",
   "generatorVersion": "3.1.0"
 }
