@@ -38,7 +38,6 @@ dependencies:
   cloud_firestore:
   firebase_core_web:
   vibration:
-  sensors_plus:
 
 dev_dependencies:
   flutter_test:
