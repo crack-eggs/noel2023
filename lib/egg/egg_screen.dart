@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../connection/egg_connection.dart';
 
 class EggScreen extends StatefulWidget {
   const EggScreen({Key? key}) : super(key: key);
@@ -15,15 +16,13 @@ class _EggScreenState extends State<EggScreen>
   @override
   void initState() {
     super.initState();
+    EggConnection();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
     _controller.forward();
-    FirebaseFirestore.instance.collection('test').snapshots().listen((event) {
-      print('_EggScreenState.initState');
-      _controller.forward(from: 0);
-    });
+
   }
 
   @override
