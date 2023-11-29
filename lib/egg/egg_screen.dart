@@ -16,13 +16,20 @@ class _EggScreenState extends State<EggScreen>
   @override
   void initState() {
     super.initState();
-    EggConnection();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
-    _controller.forward();
-
+    EggConnection().listenStartCrack(
+      callback: (_) {
+        _controller.repeat();
+      },
+    );
+    EggConnection().listenStopCrack(
+      callback: (_) {
+        _controller.stop(canceled: true);
+      },
+    );
   }
 
   @override

@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:noel/main.dart';
+import 'package:noel/connection/egg_connection.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../router/router.dart';
+import '../enums.dart';
+import '../main.dart';
 
 class QRCodeScreen extends StatefulWidget {
   const QRCodeScreen({super.key});
@@ -19,7 +20,11 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
 
   @override
   void initState() {
-    insertSupabase();
+    EggConnection().listenStart(
+      callback: (payload) {
+        Navigator.of(context).pushReplacementNamed('/match');
+      },
+    );
     super.initState();
   }
 
@@ -33,16 +38,6 @@ class _QRCodeScreenState extends State<QRCodeScreen> {
         size: 200.0,
       ),
     ));
-  }
-
-  void insertSupabase() async {
-    stream ??= supabase
-        .from('match_detail')
-        .stream(primaryKey: ['id'])
-        .eq('match_id', '1234567890')
-        .listen((event) {
-      AppRouter.router.navigateTo(context, "/match", transition: TransitionType.fadeIn);
-    });
   }
 
   @override

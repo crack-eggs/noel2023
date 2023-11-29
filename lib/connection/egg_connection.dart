@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:noel/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,13 +11,33 @@ class EggConnection {
 
   EggConnection._internal() {
     print('EggConnection._internal');
-    supabase.channel('game').on(
+  }
+
+  void listenStart({required Function(Map<String, dynamic>) callback}) {
+    gameChannel.on(
         RealtimeListenTypes.broadcast,
         ChannelFilter(
           event: EventType.start.name,
         ), (payload, [ref]) {
-      print('EventType.start.name');
-      print('payload: $payload');
+      callback(payload);
+    });
+  }
+  void listenStartCrack({required Function(Map<String, dynamic>) callback}) {
+    gameChannel.on(
+        RealtimeListenTypes.broadcast,
+        ChannelFilter(
+          event: EventType.startCrack.name,
+        ), (payload, [ref]) {
+      callback(payload);
+    });
+  }
+  void listenStopCrack({required Function(Map<String, dynamic>) callback}) {
+    gameChannel.on(
+        RealtimeListenTypes.broadcast,
+        ChannelFilter(
+          event: EventType.stopCrack.name,
+        ), (payload, [ref]) {
+      callback(payload);
     });
   }
 }

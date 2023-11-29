@@ -11,9 +11,7 @@ class PlayerConnection {
 
   GoogleSignInAccount? user;
 
-  PlayerConnection._internal() {
-    print('GameConnection created');
-  }
+  PlayerConnection._internal();
 
   Future<void> onUserLogin() async {
     user = await googleSignIn.signIn();
@@ -31,19 +29,28 @@ class PlayerConnection {
     }
   }
 
-  Future<void> onUserPlayGame() async {
-    print('PlayerConnection.onUserPlayGame');
-    gameChannel.on(
-        RealtimeListenTypes.broadcast,
-        ChannelFilter(
-        ), (payload, [ref]) {
-      print('EventType.start.name');
-      print('payload: $payload');
-    });
-
+  Future<void> onUserStartPlayGame({required String matchId}) async {
     gameChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.start.name,
-        payload: {'email': user!.email});
+        payload: {'email': 'ducduy.dev@gmail.com', 'matchId': matchId});
+  }
+
+  Future<void> onUserStartCrack() async {
+    gameChannel.send(
+        type: RealtimeListenTypes.broadcast,
+        event: EventType.startCrack.name,
+        payload: {
+          'email': 'ducduy.dev@gmail.com',
+        });
+  }
+
+  Future<void> onUserStopCrack() async {
+    gameChannel.send(
+        type: RealtimeListenTypes.broadcast,
+        event: EventType.stopCrack.name,
+        payload: {
+          'email': 'ducduy.dev@gmail.com',
+        });
   }
 }

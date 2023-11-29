@@ -13,15 +13,13 @@ class SignInGoogleScreen extends StatefulWidget {
 
 class _SignInGoogleScreenState extends State<SignInGoogleScreen> {
   Future<void> _handleSignIn() async {
-    try {
-      // await PlayerConnection().onUserLogin();
-      await PlayerConnection().onCreateNewUser();
-      await PlayerConnection().onUserPlayGame();
+      print('_SignInGoogleScreenState._handleSignIn');
+      print('widget.matchId: ${widget.matchId}');
+    // await PlayerConnection().onUserLogin();
+      // await PlayerConnection().onCreateNewUser();
+      await PlayerConnection().onUserStartPlayGame(matchId: widget.matchId);
 
       Navigator.of(context).pushReplacementNamed('/cracker');
-    } catch (e) {
-      print('error: $e');
-    }
   }
 
   @override

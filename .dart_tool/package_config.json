@@ -140,6 +140,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "get_it",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/get_it-7.6.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "glob",
       "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/glob-2.1.2",
       "packageUri": "lib/",
@@ -254,6 +260,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "nested",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "package_config",
       "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/package_config-2.1.0",
       "packageUri": "lib/",
@@ -324,6 +336,12 @@
       "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/postgrest-1.5.2",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "provider",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/provider-6.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "pub_semver",
@@ -626,7 +644,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-11-28T07:54:57.078762Z",
+  "generated": "2023-11-29T03:14:17.630771Z",
   "generator": "pub",
   "generatorVersion": "3.0.0"
 }

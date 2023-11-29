@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../enums.dart';
-import '../main.dart';
+import 'package:noel/connection/player_connection.dart';
 
 class CrackerPlayScreen extends StatefulWidget {
   const CrackerPlayScreen({Key? key}) : super(key: key);
@@ -12,17 +9,22 @@ class CrackerPlayScreen extends StatefulWidget {
 }
 
 class _CrackerPlayScreenState extends State<CrackerPlayScreen> {
+  int count = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: ElevatedButton(
-          onPressed: (){
-            print('_CrackerPlayScreenState.build');
-            gameChannel.send(
-                type: RealtimeListenTypes.broadcast,
-                event: EventType.start.name,
-                payload: {'email': 'user!.email'});
+          onPressed: () {
+            if (count == 0) {
+              PlayerConnection().onUserStartCrack();
+            }
+
+            if (count == 10) {
+              PlayerConnection().onUserStopCrack();
+            }
+            count++;
           },
           child: const Text('Tap Tap'),
         ),

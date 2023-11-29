@@ -40,6 +40,8 @@ dependencies:
   google_sign_in:
   qr_flutter:
   fluro:
+  get_it:
+  provider:
 
 dev_dependencies:
   flutter_test:
