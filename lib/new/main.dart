@@ -4,8 +4,10 @@ import 'package:noel/new/phone/di/injection.dart';
 import 'package:noel/new/phone/presentation/pages/home_page.dart';
 import 'package:noel/new/phone/presentation/provider/game_provider.dart';
 import 'package:noel/new/phone/presentation/provider/leaderboard_provider.dart';
+import 'package:noel/new/phone/presentation/provider/mobile_game_provider.dart';
 import 'package:noel/new/phone/presentation/provider/sign_in_google_provider.dart';
 import 'package:noel/new/phone/presentation/provider/user_provider.dart';
+import 'package:noel/new/phone/presentation/provider/web_game_provider.dart';
 import 'package:noel/new/phone/route.dart';
 import 'package:noel/new/phone/service/user_service.dart';
 import 'package:noel/new/phone/service/realtime_service.dart';
@@ -34,6 +36,9 @@ class MyApp extends StatelessWidget {
             create: (_) => sl<LeaderboardProvider>()),
         ChangeNotifierProvider<SignInGoogleProvider>(
             create: (_) => sl<SignInGoogleProvider>()),
+        ChangeNotifierProvider<MobileGameProvider>(create: (_) => sl<MobileGameProvider>()),
+        ChangeNotifierProvider<WebGameProvider>(create: (_) => sl<WebGameProvider>()),
+
       ],
       child: MaterialApp(
         onGenerateRoute: AppRouter.router.generator,

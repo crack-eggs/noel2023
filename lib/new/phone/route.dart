@@ -2,7 +2,9 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:noel/new/phone/presentation/pages/authenication_screen.dart';
 import 'package:noel/new/phone/presentation/pages/home_page.dart';
+import 'package:noel/new/phone/presentation/pages/mobile_game_play_screen.dart';
 import 'package:noel/new/phone/presentation/pages/user_profile_screen.dart';
+import 'package:noel/new/phone/presentation/pages/web_game_play_screen.dart';
 import 'package:noel/new/phone/service/user_service.dart';
 
 class AppRouter {
@@ -21,6 +23,16 @@ class AppRouter {
     );
 
     router.define(
+      '/web-game-play',
+      handler: Handler(
+        handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
+          // Return the widget you want to display for this route
+          return const WebGamePlayScreen();
+        },
+      ),
+    );
+
+    router.define(
       '/user-profile',
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
@@ -30,6 +42,15 @@ class AppRouter {
       ),
     );
 
+    router.define(
+      '/mobile-game-play',
+      handler: Handler(
+        handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
+          // Return the widget you want to display for this route
+          return const MobileGamePlayScreen();
+        },
+      ),
+    );
     router.define(
       '/login',
       handler: Handler(
