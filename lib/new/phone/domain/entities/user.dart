@@ -1,5 +1,4 @@
 class UserEntity {
-  final String id;
   final String email;
   final String displayName;
   final int score;
@@ -7,7 +6,6 @@ class UserEntity {
   final int jackpot;
 
   UserEntity({
-    required this.id,
     required this.email,
     required this.displayName,
     required this.score,
