@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noel/new/phone/presentation/shared/base_view.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/web_game_provider.dart';
@@ -11,19 +12,10 @@ class WebGamePlayScreen extends StatefulWidget {
 }
 
 class _WebGamePlayScreenState extends State<WebGamePlayScreen>
-    with SingleTickerProviderStateMixin {
+    with
+        SingleTickerProviderStateMixin,
+        VMState<WebGameProvider, WebGamePlayScreen> {
   late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-    Provider.of<WebGameProvider>(context, listen: false)
-        .setController(_controller);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +26,20 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
   }
 
   @override
-  void dispose() {
-    super.dispose();
+  Widget createWidget(BuildContext context, WebGameProvider viewModel) {
+    return RotationTransition(
+      turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
+      child: const Icon(Icons.egg_outlined, size: 300),
+    );
+  }
+
+  @override
+  void onVMReady(WebGameProvider viewModel, BuildContext context) {
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    viewModel
+        .setController(_controller);
   }
 }

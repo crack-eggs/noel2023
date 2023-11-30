@@ -1,13 +1,22 @@
 // lib/presentation/pages/home_page.dart
 import 'package:flutter/material.dart';
+import 'package:noel/new/phone/presentation/shared/base_view.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/leaderboard_provider.dart';
 import '../shared/qrcode_popup.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with VMState<WebHomeProvider, HomePage> {
+  @override
+  Widget createWidget(BuildContext context, WebHomeProvider viewModel) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Page'),
@@ -25,28 +34,26 @@ class HomePage extends StatelessWidget {
             child: const Text('Show QR Code'),
           ),
 
-          // Leaderboard
-          ElevatedButton(
-            onPressed: () {
-              Provider.of<LeaderboardProvider>(context, listen: false)
-                  .fetchLeaderboard();
-            },
-            child: const Text('Fetch Leaderboard'),
-          ),
-          Consumer<LeaderboardProvider>(
-            builder: (_, vm,___) => Column(
-              children: [
-                const Text('Leaderboard:'),
-                for (var player in vm.leaderboard)
-                  ListTile(
-                    title: Text(player.displayName),
-                    subtitle: Text('Score: ${player.score}'),
-                  ),
-              ],
-            ),
+          Consumer<WebHomeProvider>(
+            builder: (_, vm, ___) => vm.leaderboard?.isNotEmpty == true?
+              Column(
+                    children: [
+                      const Text('Leaderboard:'),
+                      for (var player in vm.leaderboard!)
+                        ListTile(
+                          title: Text(player.displayName),
+                          subtitle: Text('Score: ${player.score}'),
+                        ),
+                    ],
+                  ) : const Text('Empty'),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void onVMReady(WebHomeProvider viewModel, BuildContext context) {
+    viewModel.fetchLeaderboard();
   }
 }

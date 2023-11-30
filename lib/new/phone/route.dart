@@ -55,13 +55,9 @@ class AppRouter {
       '/login',
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
-          if (UserService().currentUser == null) {
             return SignInGoogleScreen(
               matchId: params['match_id'][0],
             );
-          }
-
-          return const UserProfileScreen();
 
           // Return the widget you want to display for this route
         },

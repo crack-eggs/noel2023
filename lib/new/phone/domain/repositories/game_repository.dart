@@ -1,7 +1,13 @@
+import '../../data/models/user_model.dart';
 import '../entities/game.dart';
 
 abstract class GameRepository {
-  Future<void> startGame(String uuid);
+  Future<void> startGame();
 
-  Future<Game?> getGame(String uuid);
+  Future<void> getGame();
+
+  Future<void> getGift();
+
+  Future<List<UserModel>?> getLeaderBoard();
+
 }

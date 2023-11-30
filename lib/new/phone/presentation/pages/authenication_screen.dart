@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:noel/new/phone/presentation/shared/base_view.dart';
 
 import '../../route.dart';
 import '../provider/sign_in_google_provider.dart';
@@ -13,16 +13,16 @@ class SignInGoogleScreen extends StatefulWidget {
   _SignInGoogleScreenState createState() => _SignInGoogleScreenState();
 }
 
-class _SignInGoogleScreenState extends State<SignInGoogleScreen> {
+class _SignInGoogleScreenState extends State<SignInGoogleScreen>
+    with VMState<SignInGoogleProvider, SignInGoogleScreen> {
   Future<void> _handleSignIn() async {
-    Provider.of<SignInGoogleProvider>(context, listen: false)
-        .onUserSignInGoogle(success: () {
+    viewModel.onUserSignInGoogle(success: () {
       AppRouter.router.navigateTo(context, '/user-profile');
     });
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget createWidget(BuildContext context, SignInGoogleProvider viewModel) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Google Login'),
@@ -36,5 +36,10 @@ class _SignInGoogleScreenState extends State<SignInGoogleScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void onVMReady(SignInGoogleProvider viewModel, BuildContext context) {
+    // TODO: implement onVMReady
   }
 }

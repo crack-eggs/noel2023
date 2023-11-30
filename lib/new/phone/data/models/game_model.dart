@@ -1,31 +1,20 @@
-import '../../domain/entities/game.dart';
 
-class GameModel extends Game {
+class GameModel {
+  final int score;
+  final String? email;
+  final int? hammersRemain;
+
   GameModel({
-    required String id,
-    required String uuid,
-    required String status,
-  }) : super(
-    id: id,
-    uuid: uuid,
-    status: status,
-  );
+    required this.score,
+    this.email,
+    this.hammersRemain,
+  });
 
-  // Create a factory constructor to convert from JSON
-  factory GameModel.fromJson(Map<String, dynamic> json) {
-    return GameModel(
-      id: json['id'],
-      uuid: json['uuid'],
-      status: json['status'],
-    );
-  }
-
-  // Convert to JSON
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'uuid': uuid,
-      'status': status,
+      'score': score,
+      'email': email,
+      'hammers_remain': hammersRemain,
     };
   }
 }

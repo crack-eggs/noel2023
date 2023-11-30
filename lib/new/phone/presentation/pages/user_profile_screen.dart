@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:noel/new/phone/enums.dart';
+import 'package:noel/new/phone/presentation/shared/base_view.dart';
 import 'package:noel/new/phone/service/user_service.dart';
-import 'package:provider/provider.dart';
 
 import '../../route.dart';
 import '../provider/user_provider.dart';
+import '../shared/topup_popup.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -12,25 +14,49 @@ class UserProfileScreen extends StatefulWidget {
   State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
-class _UserProfileScreenState extends State<UserProfileScreen> {
+class _UserProfileScreenState extends State<UserProfileScreen>
+    with VMState<UserProvider, UserProfileScreen> {
   @override
-  void initState() {
-    Provider.of<UserProvider>(context, listen: false).updateUser();
-    super.initState();
+  Widget createWidget(BuildContext context, UserProvider viewModel) {
+    return Scaffold(
+        body: consumer(
+            builder: (BuildContext context, UserProvider viewModel, _) =>
+                viewModel.state == ViewState.busy
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Column(
+                        children: [
+                          Text(
+                              'Your point: ${UserService().currentUser?.score}'),
+                          Text(
+                              'Your hammers: ${UserService().currentUser?.hammers}'),
+                          if (UserService().currentUser!.hammers > 0)
+                            ElevatedButton(
+                                onPressed: () {
+                                  viewModel.onUserStartGame();
+                                },
+                                child: const Text('Start Game')),
+                          if (UserService().currentUser!.hammers == 0)
+                            ElevatedButton(
+                                onPressed: () async {
+                                  final number = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return TopUpPopup();
+                                    },
+                                  );
+                                  if (number != null) {
+                                    viewModel.onUserTopUp(number);
+                                  }
+                                },
+                                child: const Text('Top-up'))
+                        ],
+                      )));
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
-      children: [
-        Text(UserService().currentUser!.toJson().toString()),
-        ElevatedButton(
-            onPressed: () {
-              AppRouter.router.navigateTo(context, '/mobile-game-play');
-            },
-            child: const Text('Start Game'))
-      ],
-    ));
+  void onVMReady(UserProvider viewModel, BuildContext context) {
+    viewModel.updateUser();
   }
 }

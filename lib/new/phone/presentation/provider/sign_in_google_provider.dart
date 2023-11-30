@@ -1,25 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:noel/new/phone/data/models/user_model.dart';
+import 'package:noel/new/phone/presentation/shared/base_view_model.dart';
 import 'package:noel/new/phone/service/user_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../constants.dart';
+import '../../domain/usecases/user_usecase.dart';
 
-class SignInGoogleProvider extends ChangeNotifier {
-  final SupabaseClient supabaseClient;
+class SignInGoogleProvider extends BaseViewModel {
+  SignInGoogleProvider(super.supabase, super.navigatorService, this.usecase);
 
-  SignInGoogleProvider(this.supabaseClient);
+  final UserUsecase usecase;
 
-  Future<void> onUserSignInGoogle({required Function() success}) async {
-    final google = await googleSignIn.signIn();
-    if (google != null) {
-      print('google: ${google.toString()}');
-      final user = UserModel(
-          email: google.email, displayName: google.displayName ?? google.email);
-      await supabase.from('users').insert(user.toJson());
-
-      UserService().saveUser(user);
-      success();
-    }
+  void onUserSignInGoogle({required Null Function() success}) async {
+    await usecase.userRepository.signInGoogle();
   }
 }

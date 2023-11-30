@@ -1,26 +1,37 @@
-import 'package:flutter/material.dart';
+import 'package:noel/new/phone/domain/usecases/user_usecase.dart';
+import 'package:noel/new/phone/presentation/shared/base_view_model.dart';
 import 'package:noel/new/phone/service/user_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../data/models/user_model.dart';
+import '../../data/models/topup_history_model.dart';
+import '../../enums.dart';
+import '../../route.dart';
 
-class UserProvider extends ChangeNotifier {
-  final SupabaseClient supabaseClient;
+class UserProvider extends BaseViewModel {
+  UserProvider(super.supabase, super.navigatorService, this.userUsecase);
 
-  UserProvider(this.supabaseClient);
+  final UserUsecase userUsecase;
 
   updateUser() async {
-    print('UserProvider.updateUser');
-    print('UserService().currentUser!.email: ${UserService().currentUser!.email}');
-    final result = await supabaseClient
-        .from('users')
-        .select('*')
-        .eq('email', UserService().currentUser!.email)
-        .execute();
-    if((result.data as List).isNotEmpty == true) {
-      print('test: ${(result.data[0])}');
-      final newUser = UserModel.fromJson(result.data[0]);
-      UserService().saveUser(newUser);
-    }
+    await userUsecase.fetch();
+  }
+
+  void onUserTopUp(int number) async {
+    setState(ViewState.busy);
+
+    TopUpHistoryModel values = TopUpHistoryModel(
+      email: UserService().currentUser!.email,
+      hammersBefore: UserService().currentUser!.hammers,
+      quantity: number,
+    );
+
+    await userUsecase.topup(values);
+    setState(ViewState.idle);
+  }
+
+  void onUserStartGame() async {
+    setState(ViewState.busy);
+    await userUsecase.fetch();
+    AppRouter.router.navigateTo(navigatorService.context!, '/mobile-game-play');
+    setState(ViewState.idle);
   }
 }
