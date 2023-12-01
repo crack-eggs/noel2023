@@ -22,9 +22,6 @@ class _HomePageState extends State<HomePage>
       ),
       body: Column(
         children: [
-          // Your existing UI code here
-
-          // Button to show QR code popup
           ElevatedButton(
             onPressed: () {
               String qrCodeData = "http://localhost:49430/#/login?match_id=123";
