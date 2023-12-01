@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:noel/new/phone/presentation/shared/base_view.dart';
+import '../shared/base_view.dart';
 
 import '../../route.dart';
 import '../provider/sign_in_google_provider.dart';
 
 class SignInGoogleScreen extends StatefulWidget {
-  final String matchId;
 
-  const SignInGoogleScreen({Key? key, required this.matchId}) : super(key: key);
+  const SignInGoogleScreen({Key? key, }) : super(key: key);
 
   @override
   _SignInGoogleScreenState createState() => _SignInGoogleScreenState();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noel/new/phone/presentation/shared/base_view_model.dart';
+import '../shared/base_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../constants.dart';

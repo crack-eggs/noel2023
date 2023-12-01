@@ -1,13 +1,13 @@
 import 'dart:math';
 
-import 'package:noel/new/constants.dart';
-import 'package:noel/new/phone/presentation/shared/base_view_model.dart';
-import 'package:noel/new/phone/service/user_service.dart';
+import 'package:noel/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../data/models/game_model.dart';
 import '../../enums.dart';
 import '../../service/navigator_service.dart';
+import '../../service/user_service.dart';
+import '../shared/base_view_model.dart';
 
 class MobileGameProvider extends BaseViewModel {
   final SupabaseClient supabaseClient;

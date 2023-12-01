@@ -1,6 +1,4 @@
 import 'package:get_it/get_it.dart';
-import 'package:noel/new/phone/presentation/provider/leaderboard_provider.dart';
-import 'package:noel/new/phone/presentation/provider/web_game_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../constants.dart';
@@ -11,9 +9,11 @@ import '../domain/repositories/user_repository.dart';
 import '../domain/usecases/leader_board_usecase.dart';
 import '../domain/usecases/user_usecase.dart';
 import '../presentation/provider/game_provider.dart';
+import '../presentation/provider/leaderboard_provider.dart';
 import '../presentation/provider/mobile_game_provider.dart';
 import '../presentation/provider/sign_in_google_provider.dart';
 import '../presentation/provider/user_provider.dart';
+import '../presentation/provider/web_game_provider.dart';
 import '../service/navigator_service.dart';
 import '../service/realtime_service.dart';
 

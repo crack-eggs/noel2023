@@ -1,11 +1,11 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:noel/new/phone/presentation/pages/authenication_screen.dart';
-import 'package:noel/new/phone/presentation/pages/home_page.dart';
-import 'package:noel/new/phone/presentation/pages/mobile_game_play_screen.dart';
-import 'package:noel/new/phone/presentation/pages/user_profile_screen.dart';
-import 'package:noel/new/phone/presentation/pages/web_game_play_screen.dart';
-import 'package:noel/new/phone/service/user_service.dart';
+
+import 'presentation/pages/authenication_screen.dart';
+import 'presentation/pages/home_page.dart';
+import 'presentation/pages/mobile_game_play_screen.dart';
+import 'presentation/pages/user_profile_screen.dart';
+import 'presentation/pages/web_game_play_screen.dart';
 
 class AppRouter {
   static FluroRouter router = FluroRouter();
@@ -55,8 +55,7 @@ class AppRouter {
       '/login',
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
-            return SignInGoogleScreen(
-              matchId: params['match_id'][0],
+            return const SignInGoogleScreen(
             );
 
           // Return the widget you want to display for this route

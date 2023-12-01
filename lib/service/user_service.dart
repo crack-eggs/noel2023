@@ -1,9 +1,5 @@
-import 'dart:convert';
-
-import 'package:noel/new/phone/data/models/user_model.dart';
-
 import '../../constants.dart';
-import '../../main.dart';
+import '../data/models/user_model.dart';
 
 class UserService {
   UserModel? _currentUser;

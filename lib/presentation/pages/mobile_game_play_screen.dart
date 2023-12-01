@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noel/new/phone/enums.dart';
-import 'package:provider/provider.dart';
+import 'package:noel/enums.dart';
 
 import '../../service/user_service.dart';
 import '../provider/mobile_game_provider.dart';

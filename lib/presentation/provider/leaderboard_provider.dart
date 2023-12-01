@@ -1,8 +1,7 @@
-import 'package:noel/new/phone/domain/usecases/leader_board_usecase.dart';
-import 'package:noel/new/phone/enums.dart';
-import 'package:noel/new/phone/presentation/shared/base_view_model.dart';
-
+import 'package:noel/enums.dart';
 import '../../data/models/user_model.dart';
+import '../../domain/usecases/leader_board_usecase.dart';
+import '../shared/base_view_model.dart';
 
 class WebHomeProvider extends BaseViewModel {
   final LeaderBoardUsecase usecase;
