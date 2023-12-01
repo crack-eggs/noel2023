@@ -1,6 +1,6 @@
-import 'package:noel/new/phone/domain/usecases/user_usecase.dart';
-import 'package:noel/new/phone/presentation/shared/base_view_model.dart';
-import 'package:noel/new/phone/service/user_service.dart';
+import '../../domain/usecases/user_usecase.dart';
+import '../../service/user_service.dart';
+import '../shared/base_view_model.dart';
 
 import '../../data/models/topup_history_model.dart';
 import '../../enums.dart';

@@ -1,9 +1,8 @@
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:noel/new/phone/service/navigator_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../enums.dart';
+import '../../service/navigator_service.dart';
 
 abstract class BaseViewModel extends ChangeNotifier {
   BaseViewModel(this.supabase, this.navigatorService);

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:noel/new/phone/enums.dart';
-import 'package:noel/new/phone/presentation/shared/base_view.dart';
-import 'package:noel/new/phone/service/user_service.dart';
-
-import '../../route.dart';
+import 'package:noel/enums.dart';
+import '../../service/user_service.dart';
 import '../provider/user_provider.dart';
+import '../shared/base_view.dart';
 import '../shared/topup_popup.dart';
 
 class UserProfileScreen extends StatefulWidget {

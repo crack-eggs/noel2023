@@ -1,6 +1,6 @@
-import 'package:noel/new/phone/domain/repositories/user_repository.dart';
 
 import '../../data/models/topup_history_model.dart';
+import '../repositories/user_repository.dart';
 
 class UserUsecase {
   final UserRepository userRepository;

@@ -1,9 +1,8 @@
-// lib/presentation/pages/home_page.dart
 import 'package:flutter/material.dart';
-import 'package:noel/new/phone/presentation/shared/base_view.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/leaderboard_provider.dart';
+import '../shared/base_view.dart';
 import '../shared/qrcode_popup.dart';
 
 class HomePage extends StatefulWidget {

@@ -1,6 +1,6 @@
-import 'package:noel/new/phone/domain/repositories/game_repository.dart';
 
 import '../../data/models/user_model.dart';
+import '../repositories/game_repository.dart';
 
 class LeaderBoardUsecase{
   final GameRepository gameRepository;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:noel/new/phone/presentation/shared/base_view.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/web_game_provider.dart';
+import '../shared/base_view.dart';
 
 class WebGamePlayScreen extends StatefulWidget {
   const WebGamePlayScreen({Key? key}) : super(key: key);
