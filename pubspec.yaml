@@ -37,12 +37,19 @@ dependencies:
   cupertino_icons: ^1.0.2
   vibration:
   supabase_flutter:
-  google_sign_in:
   qr_flutter:
   fluro:
   get_it:
   provider:
   shared_preferences:
+  google_identity_services_web:
+  google_sign_in_platform_interface:
+  google_sign_in_web:
+  dio:
+  crypto:
+  uuid:
+  blowfish_ecb:
+  dio_log:
 
 dev_dependencies:
   flutter_test:

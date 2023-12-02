@@ -12,19 +12,19 @@ class UserProvider extends BaseViewModel {
   final UserUsecase userUsecase;
 
   updateUser() async {
+    setState(ViewState.busy);
+    print('UserProvider.updateUser');
     await userUsecase.fetch();
+    setState(ViewState.idle);
+
   }
 
   void onUserTopUp(int number) async {
+    print('UserProvider.onUserTopUp');
     setState(ViewState.busy);
+    await userUsecase.topup(number);
+    await userUsecase.fetch();
 
-    TopUpHistoryModel values = TopUpHistoryModel(
-      email: UserService().currentUser!.email,
-      hammersBefore: UserService().currentUser!.hammers,
-      quantity: number,
-    );
-
-    await userUsecase.topup(values);
     setState(ViewState.idle);
   }
 

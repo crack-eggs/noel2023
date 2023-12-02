@@ -41,6 +41,7 @@ void init() {
   sl.registerFactory(() => MobileGameProvider(
         supabase,
         sl(),
+        sl(),
       ));
   sl.registerFactory(() => WebGameProvider(supabase, sl()));
 

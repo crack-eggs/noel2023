@@ -22,20 +22,20 @@ class GameRepositoryImpl implements GameRepository {
 
   @override
   Future<List<UserModel>?> getLeaderBoard() async {
-    try {
-      final response = await supabaseClient
-          .from('users')
-          .select('*')
-          .order('score', ascending: false)
-          .limit(10)
-          .execute();
-      return (response.data as List<dynamic>)
-          .map((data) => UserModel.fromJson(data))
-          .toList();
-    } catch (e) {
-      print('Error fetching leaderboard: $e');
-      return null;
-    }
+    // try {
+    //   final response = await supabaseClient
+    //       .from('users')
+    //       .select('*')
+    //       .order('score', ascending: false)
+    //       .limit(10)
+    //       .execute();
+    //   return (response.data as List<dynamic>)
+    //       .map((data) => UserModel.fromJson(data))
+    //       .toList();
+    // } catch (e) {
+    //   print('Error fetching leaderboard: $e');
+    //   return null;
+    // }
   }
 
   @override

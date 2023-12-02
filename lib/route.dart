@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:noel/service/user_service.dart';
 
 import 'presentation/pages/authenication_screen.dart';
 import 'presentation/pages/home_page.dart';
@@ -55,14 +56,16 @@ class AppRouter {
       '/login',
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
-            return const SignInGoogleScreen(
-            );
+          if (UserService().currentUser != null) {
+            return const UserProfileScreen();
+          }
+
+          return const SignInGoogleScreen();
 
           // Return the widget you want to display for this route
         },
       ),
     );
-
     // Add more routes as needed
   }
 }

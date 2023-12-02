@@ -1,4 +1,3 @@
-
 import '../../data/models/topup_history_model.dart';
 import '../repositories/user_repository.dart';
 
@@ -15,7 +14,11 @@ class UserUsecase {
     return await userRepository.fetchUser();
   }
 
-  Future<void> topup(TopUpHistoryModel model) async {
-    return await userRepository.topup(model);
+  Future<void> topup(int quantity) async {
+    return await userRepository.topup(quantity);
+  }
+
+  Future<void> updateScore(int random) async {
+    return await userRepository.updateScore(random);
   }
 }
