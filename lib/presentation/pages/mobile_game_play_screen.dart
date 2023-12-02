@@ -28,7 +28,7 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
                     Text('Your point: ${UserService().currentUser?.score}'),
                     Text('Your hammers: ${UserService().currentUser?.hammers}'),
                     if (viewModel.stateGame == StateGame.start &&
-                        (UserService().currentUser!.hammers > 0))
+                        (UserService().currentUser!.hammers >= 0))
                       ElevatedButton(
                         onPressed: () {
                           viewModel.onUserTap();

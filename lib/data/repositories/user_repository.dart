@@ -1,8 +1,12 @@
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import 'package:noel/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../constants.dart';
 import '../../domain/repositories/user_repository.dart';
+import '../../enums.dart';
 import '../../service/user_service.dart';
+import '../../utils/cryto.dart';
 import '../models/topup_history_model.dart';
 import '../models/user_model.dart';
 
@@ -12,43 +16,24 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl(this.supabaseClient);
 
   @override
-  Future<void> signInGoogle() async {
-    final googleUser = await googleSignIn.signInSilently();
-    final googleAuth = await googleUser!.authentication;
-    final idToken = googleAuth.idToken;
-
-    if (idToken == null) {
-      throw 'No ID Token found.';
-    }
-
-    final result = await supabaseClient.auth.signInWithIdToken(
-      provider: Provider.google,
-      idToken: idToken,
-    );
-
-    print('session: ${result.session?.toJson()}');
-
-    print('user: ${result.user?.toJson()}');
-    final response = await supabaseClient
-        .from('users')
-        .select('*')
-        .order('score', ascending: false)
-        .limit(10)
-        .execute();
-
-    print('response: ${response.data}');
-
-    // final user = UserModel(
-    //     email: googleUser.email,
-    //     displayName: googleUser.displayName ?? googleUser.email);
-    // await createUser(user);
-    // await UserService().saveUser(user);
+  Future<void> signInGoogle({GoogleSignInUserData? userData}) async {
+    UserService().saveUser(
+        UserModel(email: userData!.email, displayName: userData.displayName!));
+    await fetchUser();
   }
 
   @override
   Future<void> createUser(UserModel user) async {
+    print('UserRepositoryImpl.createUser');
     try {
-      await supabase.from('users').insert(user.toJson());
+      await dio.post(
+        '/user',
+        queryParameters: {
+          'code': encryptBlowfish(),
+          'type': TypeRequest.insert.name
+        },
+        data: user.toJson(),
+      );
     } catch (e) {
       print('error: ${e.toString()}');
     }
@@ -61,27 +46,50 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<void> updateScore(int score) {
-    // TODO: implement updateScore
-    throw UnimplementedError();
+  Future<void> updateScore(int score) async {
+    print('UserRepositoryImpl.updateScore');
+    try {
+      await dio.patch('/user/score', queryParameters: {
+        'code': encryptBlowfish(),
+        'email': UserService().currentUser!.email,
+        'type': TypeRequest.update.name
+      }, data: {
+        'score': score
+      });
+    } catch (e) {
+      print('error: ${e.toString()}');
+    }
   }
 
   @override
   Future<void> fetchUser() async {
-    await UserService().fetch();
+    print('UserRepositoryImpl.fetchUser');
+    final result = await dio.get('/user', queryParameters: {
+      'code': encryptBlowfish(),
+      'email': UserService().currentUser!.email,
+      'type': TypeRequest.select.name
+    });
+
+    final List<UserModel> newUser = (result.data as List<dynamic>)
+        .map((data) => UserModel.fromJson(data))
+        .toList();
+
+    await UserService().fetch(newUser);
   }
 
   @override
-  Future<void> topup(TopUpHistoryModel model) async {
-    await Future.wait([
-      supabase.from('topup_history').insert(model.toJson()).execute(),
-      supabase
-          .from('users')
-          .update(
-              {'hammers': UserService().currentUser!.hammers + model.quantity})
-          .eq('email', UserService().currentUser!.email)
-          .execute()
-    ]);
-    await fetchUser();
+  Future<void> topup(int quantity) async {
+      print('UserRepositoryImpl.updateScore');
+      try {
+        await dio.patch('/user', queryParameters: {
+          'code': encryptBlowfish(),
+          'email': UserService().currentUser!.email,
+          'type': TypeRequest.update.name
+        }, data: {
+          'hammers': quantity,
+        });
+      } catch (e) {
+        print('error: ${e.toString()}');
+      }
   }
 }
