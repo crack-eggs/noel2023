@@ -14,7 +14,6 @@ class WebHomeProvider extends BaseViewModel {
 
   Future<void> fetchLeaderboard() async {
     setState(ViewState.busy);
-
     try {
       _leaderboard = await usecase.call();
     } catch (e) {

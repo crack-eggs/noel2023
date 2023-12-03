@@ -1,13 +1,9 @@
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import 'package:noel/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../../constants.dart';
 import '../../domain/repositories/user_repository.dart';
-import '../../enums.dart';
 import '../../service/user_service.dart';
 import '../../utils/cryto.dart';
-import '../models/topup_history_model.dart';
 import '../models/user_model.dart';
 
 class UserRepositoryImpl implements UserRepository {
@@ -19,7 +15,14 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> signInGoogle({GoogleSignInUserData? userData}) async {
     UserService().saveUser(
         UserModel(email: userData!.email, displayName: userData.displayName!));
-    await fetchUser();
+    try {
+      await createUser(
+          UserModel(email: userData.email, displayName: userData.displayName!));
+    } catch (e) {
+      print('error: ${e.toString()}');
+    } finally {
+      await fetchUser();
+    }
   }
 
   @override
@@ -30,7 +33,6 @@ class UserRepositoryImpl implements UserRepository {
         '/user',
         queryParameters: {
           'code': encryptBlowfish(),
-          'type': TypeRequest.insert.name
         },
         data: user.toJson(),
       );
@@ -49,10 +51,9 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> updateScore(int score) async {
     print('UserRepositoryImpl.updateScore');
     try {
-      await dio.patch('/user/score', queryParameters: {
+      await dio.patch('/user', queryParameters: {
         'code': encryptBlowfish(),
         'email': UserService().currentUser!.email,
-        'type': TypeRequest.update.name
       }, data: {
         'score': score
       });
@@ -67,7 +68,6 @@ class UserRepositoryImpl implements UserRepository {
     final result = await dio.get('/user', queryParameters: {
       'code': encryptBlowfish(),
       'email': UserService().currentUser!.email,
-      'type': TypeRequest.select.name
     });
 
     final List<UserModel> newUser = (result.data as List<dynamic>)
@@ -79,17 +79,16 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<void> topup(int quantity) async {
-      print('UserRepositoryImpl.updateScore');
-      try {
-        await dio.patch('/user', queryParameters: {
-          'code': encryptBlowfish(),
-          'email': UserService().currentUser!.email,
-          'type': TypeRequest.update.name
-        }, data: {
-          'hammers': quantity,
-        });
-      } catch (e) {
-        print('error: ${e.toString()}');
-      }
+    print('UserRepositoryImpl.topup');
+    try {
+      await dio.patch('/user', queryParameters: {
+        'code': encryptBlowfish(),
+        'email': UserService().currentUser!.email,
+      }, data: {
+        'hammers': quantity,
+      });
+    } catch (e) {
+      print('error: ${e.toString()}');
+    }
   }
 }

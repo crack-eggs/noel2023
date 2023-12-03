@@ -5,5 +5,3 @@ enum EventType { start, startTap, stopTap, getGift, restartGame }
 enum ViewState { idle, busy, dispose }
 
 enum StateGame { start, end }
-
-enum TypeRequest { select, update, insert }

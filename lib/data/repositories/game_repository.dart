@@ -1,6 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/repositories/game_repository.dart';
+import '../../main.dart';
+import '../../utils/cryto.dart';
 import '../models/user_model.dart';
 
 class GameRepositoryImpl implements GameRepository {
@@ -22,20 +24,20 @@ class GameRepositoryImpl implements GameRepository {
 
   @override
   Future<List<UserModel>?> getLeaderBoard() async {
-    // try {
-    //   final response = await supabaseClient
-    //       .from('users')
-    //       .select('*')
-    //       .order('score', ascending: false)
-    //       .limit(10)
-    //       .execute();
-    //   return (response.data as List<dynamic>)
-    //       .map((data) => UserModel.fromJson(data))
-    //       .toList();
-    // } catch (e) {
-    //   print('Error fetching leaderboard: $e');
-    //   return null;
-    // }
+    print('GameRepositoryImpl.getLeaderBoard');
+    try {
+      final response = await dio.get(
+        '/user/leaderboard',
+        queryParameters: {
+          'code': encryptBlowfish(),
+        },
+      );
+      return (response.data as List<dynamic>)
+          .map((data) => UserModel.fromJson(data))
+          .toList();
+    } catch (e) {
+      print('error: ${e.toString()}');
+    }
   }
 
   @override
@@ -43,5 +45,4 @@ class GameRepositoryImpl implements GameRepository {
     // TODO: implement startGame
     throw UnimplementedError();
   }
-
 }
