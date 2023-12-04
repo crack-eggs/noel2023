@@ -9,6 +9,7 @@ import { decodeHex } from "https://deno.land/x/crypto@v0.10.1/dev_deps.ts";
 export const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': '*',
+  'Access-Control-Allow-Methods': '*',
   "Content-Type": "application/json",
 }
 const secretKey = 'crackegg1996';
