@@ -53,6 +53,7 @@ dependencies:
   flutter_svg:
   google_fonts:
   tiengviet:
+  fluttertoast:
 
 dev_dependencies:
   flutter_test:

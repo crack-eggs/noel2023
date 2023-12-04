@@ -4,6 +4,7 @@ import 'package:noel/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../data/models/game_model.dart';
+import '../../domain/usecases/game_usecase.dart';
 import '../../domain/usecases/user_usecase.dart';
 import '../../enums.dart';
 import '../../service/navigator_service.dart';
@@ -14,34 +15,17 @@ class MobileGameProvider extends BaseViewModel {
   final SupabaseClient supabaseClient;
   final NavigationService na;
   final UserUsecase usecase;
+  final GameUsecase gameUsecase;
 
-  MobileGameProvider(this.supabaseClient, this.na, this.usecase)
+  MobileGameProvider(
+      this.supabaseClient, this.na, this.usecase, this.gameUsecase)
       : super(supabaseClient, na);
 
   int countTap = 0;
 
   StateGame stateGame = StateGame.start;
 
-  void onUserStartTap() async {
-    if (UserService().currentUser!.hammers > 0) {
-      setState(ViewState.busy);
-
-      countTap = 0;
-      await supabaseClient
-          .from('users')
-          .update({'hammers': UserService().currentUser!.hammers - 1})
-          .eq('email', UserService().currentUser?.email)
-          .execute();
-      await usecase.fetch();
-      stateGame = StateGame.start;
-      gameChannel.send(
-          type: RealtimeListenTypes.broadcast,
-          event: EventType.startTap.name,
-          payload: {});
-
-      setState(ViewState.idle);
-    }
-  }
+  late String matchId;
 
   void onUserStopTap() {
     print('MobileGameProvider.onUserStopTap');
@@ -62,26 +46,9 @@ class MobileGameProvider extends BaseViewModel {
         event: EventType.getGift.name,
         payload: {'type': 1, 'gift': random});
 
-    await Future.wait([
-      usecase.updateScore(random),
-    ]);
-
-    // GameModel gameModel = GameModel(
-    //     score: random,
-    //     email: UserService().currentUser?.email,
-    //     hammersRemain: UserService().currentUser!.hammers);
-    // await Future.wait([
-    //   supabaseClient.from('games').insert(gameModel.toJson()).execute(),
-    //   supabaseClient
-    //       .from('users')
-    //       .update({
-    //         'score': UserService().currentUser!.score + random,
-    //       })
-    //       .eq('email', UserService().currentUser?.email)
-    //       .execute()
-    // ]);
-    // await usecase.fetch();
-    // setState(ViewState.idle);
+    await usecase.updateScore(random);
+    await usecase.fetch();
+    setState(ViewState.idle);
   }
 
   void onUserTap() {
@@ -101,16 +68,17 @@ class MobileGameProvider extends BaseViewModel {
     // countTap++;
   }
 
-  void onUserContinue() async {
+  void onUserContinue({required Function onFailure}) async {
     setState(ViewState.busy);
 
     if (UserService().currentUser!.hammers > 0) {
-      countTap = 0;
-      await supabaseClient
-          .from('users')
-          .update({'hammers': UserService().currentUser!.hammers - 1})
-          .eq('email', UserService().currentUser?.email)
-          .execute();
+      final validate = await gameUsecase.checkGameValidation(matchId);
+      if (validate == false) {
+        onFailure();
+        setState(ViewState.idle);
+        return;
+      }
+      await usecase.reduceHammer();
       await usecase.fetch();
 
       stateGame = StateGame.start;
@@ -120,5 +88,18 @@ class MobileGameProvider extends BaseViewModel {
           payload: {});
       setState(ViewState.idle);
     }
+  }
+
+  void init(String matchId) {
+    this.matchId = matchId;
+    setState(ViewState.busy);
+
+    stateGame = StateGame.start;
+    gameChannel.send(
+        type: RealtimeListenTypes.broadcast,
+        event: EventType.startTap.name,
+        payload: {});
+
+    setState(ViewState.idle);
   }
 }

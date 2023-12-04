@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:noel/enums.dart';
+import 'package:noel/utils/toast.dart';
 
 import '../../service/user_service.dart';
 import '../provider/mobile_game_provider.dart';
 import '../shared/base_view.dart';
 
 class MobileGamePlayScreen extends StatefulWidget {
-  const MobileGamePlayScreen({Key? key}) : super(key: key);
+  const MobileGamePlayScreen({Key? key, required this.matchId})
+      : super(key: key);
+  final String matchId;
 
   @override
   State<MobileGamePlayScreen> createState() => _MobileGamePlayScreenState();
@@ -39,7 +42,11 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
                         (UserService().currentUser!.hammers > 0))
                       ElevatedButton(
                         onPressed: () {
-                          viewModel.onUserContinue();
+                          viewModel.onUserContinue(
+                            onFailure: () {
+                              AppToast.showError( "Game id not valid, please try again with another id!");
+                            },
+                          );
                         },
                         child: const Text('Continue'),
                       ),
@@ -50,6 +57,6 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
 
   @override
   void onVMReady(MobileGameProvider viewModel, BuildContext context) {
-    viewModel.onUserStartTap();
+    viewModel.init(widget.matchId);
   }
 }

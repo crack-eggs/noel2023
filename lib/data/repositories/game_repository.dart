@@ -1,3 +1,4 @@
+import 'package:noel/service/user_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/repositories/game_repository.dart';
@@ -9,18 +10,6 @@ class GameRepositoryImpl implements GameRepository {
   final SupabaseClient supabaseClient;
 
   GameRepositoryImpl(this.supabaseClient);
-
-  @override
-  Future<void> getGame() {
-    // TODO: implement getGame
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> getGift() {
-    // TODO: implement getGift
-    throw UnimplementedError();
-  }
 
   @override
   Future<List<UserModel>?> getLeaderBoard() async {
@@ -41,8 +30,35 @@ class GameRepositoryImpl implements GameRepository {
   }
 
   @override
-  Future<void> startGame() {
-    // TODO: implement startGame
-    throw UnimplementedError();
+  Future<void> createMatch(String matchId) async {
+    print('GameRepositoryImpl.createMatch');
+    await dio.post(
+      '/user/create-match',
+      queryParameters: {
+        'code': encryptBlowfish(),
+      },
+      data: {
+        'id': matchId,
+        if (UserService().currentUser != null)
+          'email': UserService().currentUser!.email,
+      },
+    );
+  }
+
+  @override
+  Future<bool> checkGameValidation(String id) async {
+    try {
+      final result =  await dio.get(
+        '/user/match-validate',
+        queryParameters: {
+          'code': encryptBlowfish(),
+          'match_id': id,
+        },
+      );
+      return result.data;
+    } catch (e) {
+      print('error: ${e.toString()}');
+      rethrow;
+    }
   }
 }

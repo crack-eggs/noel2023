@@ -1,4 +1,5 @@
 // lib/constants.dart
+import 'package:flutter/material.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -16,3 +17,8 @@ final gameChannel = supabase.channel('game',
 
 final GoogleSignInPlugin googleSignIn =
 GoogleSignInPlatform.instance as GoogleSignInPlugin;
+
+const Color primaryColor = Color(0xFFBD0F72);
+
+
+String colorToast = 'linear-gradient(to right, #BD0F72, #BD0F72)';

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:noel/enums.dart';
+import '../../constants.dart';
 import '../../service/user_service.dart';
+import '../../utils/toast.dart';
 import '../provider/user_provider.dart';
 import '../shared/base_view.dart';
 import '../shared/topup_popup.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({Key? key}) : super(key: key);
+  const UserProfileScreen({Key? key, required this.matchId}) : super(key: key);
+  final String matchId;
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -32,7 +36,11 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                           if (UserService().currentUser!.hammers > 0)
                             ElevatedButton(
                                 onPressed: () {
-                                  viewModel.onUserStartGame();
+                                  viewModel.onUserStartGame(widget.matchId,
+                                      onFailure: () {
+                                    AppToast.showError(
+                                        "Game id not valid, please try again with another id!");
+                                  });
                                 },
                                 child: const Text('Start Game')),
                           if (UserService().currentUser!.hammers == 0)

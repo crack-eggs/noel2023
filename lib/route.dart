@@ -37,8 +37,7 @@ class AppRouter {
       '/user-profile',
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
-          // Return the widget you want to display for this route
-          return const UserProfileScreen();
+          return UserProfileScreen(matchId: params['match_id'][0]);
         },
       ),
     );
@@ -48,7 +47,7 @@ class AppRouter {
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
           // Return the widget you want to display for this route
-          return const MobileGamePlayScreen();
+          return  MobileGamePlayScreen(matchId: params['match_id'][0]);
         },
       ),
     );
@@ -56,12 +55,7 @@ class AppRouter {
       '/login',
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
-          if (UserService().currentUser != null) {
-            return const UserProfileScreen();
-          }
-
-          return const SignInGoogleScreen();
-
+          return SignInGoogleScreen(matchId: params['match_id'][0]);
           // Return the widget you want to display for this route
         },
       ),

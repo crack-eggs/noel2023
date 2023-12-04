@@ -11,4 +11,7 @@ abstract class UserRepository {
   Future<void> updateHammers(int hammers);
   Future<void> fetchUser();
   Future<void> topup(int quantity);
+
+  Future<void> reduceHammer();
+
 }

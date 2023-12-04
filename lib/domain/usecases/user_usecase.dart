@@ -18,6 +18,10 @@ class UserUsecase {
     return await userRepository.topup(quantity);
   }
 
+  Future<void> reduceHammer() async {
+    return await userRepository.reduceHammer();
+  }
+
   Future<void> updateScore(int random) async {
     return await userRepository.updateScore(random);
   }

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tiengviet/tiengviet.dart';
 
 import '../../enums.dart';
-import '../provider/leaderboard_provider.dart';
+import '../provider/web_home_provider.dart';
 import '../shared/base_view.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,78 +19,96 @@ class _HomePageState extends State<HomePage>
   @override
   Widget createWidget(BuildContext context, WebHomeProvider viewModel) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/home/background_home.png'),
-            fit: BoxFit.fill,
+      body: consumer(
+        builder: (BuildContext context, WebHomeProvider viewModel, _) =>
+            Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/home/background_home.png'),
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Image.asset(
-                'assets/home/logo_home.png',
-                width: 500,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+          child: Stack(
+            children: [
+              AnimatedPositioned(
+                left: 0,
+                right: 0,
+                top: viewModel.isLoaded ? 0 : -250,
+                duration: const Duration(milliseconds: 800),
                 child: Image.asset(
-                  'assets/home/egg_center.png',
+                  'assets/home/logo_home.png',
+                  height: 250,
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Image.asset(
+                    'assets/home/egg_center.png',
+                    width: 400,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height / 12,
+                left: MediaQuery.of(context).size.width / 2 + 20,
+                child: Image.asset(
+                  'assets/home/egg_1.png',
+                  width: 200,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+              Positioned(
+                bottom: MediaQuery.of(context).size.height / 8,
+                right: MediaQuery.of(context).size.width / 5 * 2 + 30,
+                child: Image.asset(
+                  'assets/home/egg_2.png',
                   width: 400,
                   fit: BoxFit.fitWidth,
                 ),
               ),
-            ),
-            Positioned(
-              bottom: MediaQuery.of(context).size.height / 12,
-              left: MediaQuery.of(context).size.width / 2 + 20,
-              child: Image.asset(
-                'assets/home/egg_1.png',
-                width: 200,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            Positioned(
-              bottom: MediaQuery.of(context).size.height / 8,
-              right: MediaQuery.of(context).size.width / 5 * 2 + 30,
-              child: Image.asset(
-                'assets/home/egg_2.png',
-                width: 400,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: SvgPicture.asset(
-                  'assets/home/start_button.svg',
-                  width: 400,
-                  fit: BoxFit.fitWidth,
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.only(
+                      bottom: viewModel.btnSize == WebHomeProvider.btnLargeSize
+                          ? 12
+                          : 20),
+                  child: GestureDetector(
+                    onTap: () async {
+                      viewModel.changeSizeButton(WebHomeProvider.btnSmallSize);
+                      await Future.delayed(const Duration(milliseconds: 100));
+                      viewModel.changeSizeButton(WebHomeProvider.btnLargeSize);
+
+                    },
+                    child: SvgPicture.asset(
+                      'assets/home/start_button.svg',
+                      height: viewModel.btnSize,
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: _buildLeaderBoard(),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width/20,
-              top: 40,
-              child: Image.asset(
-                'assets/home/OTSV.png',
-                fit: BoxFit.fitWidth,
-                width: 100,
+              Align(
+                alignment: Alignment.centerRight,
+                child: _buildLeaderBoard(),
               ),
-            ),
-          ],
+              Positioned(
+                left: MediaQuery.of(context).size.width / 20,
+                top: 40,
+                child: Image.asset(
+                  'assets/home/OTSV.png',
+                  fit: BoxFit.fitWidth,
+                  width: 100,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -117,12 +135,13 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           Positioned(
-            bottom: 230,
-            left: 40,
-            right: 0,
-            child: consumer(
+              bottom: 230,
+              left: 40,
+              right: 0,
+              child: consumer(
                 builder: (BuildContext context, WebHomeProvider viewModel, _) =>
-                    viewModel.state == ViewState.busy
+                    viewModel.state == ViewState.busy ||
+                            viewModel.leaderboard == null
                         ? const Center(
                             child: CircularProgressIndicator(),
                           )
@@ -132,8 +151,8 @@ class _HomePageState extends State<HomePage>
                             score:
                                 viewModel.leaderboard!.first.score.toString(),
                             avatar: viewModel.leaderboard!.first.avatar,
-                          )),
-          )
+                          ),
+              ))
         ],
       ),
     );
@@ -193,5 +212,8 @@ class _HomePageState extends State<HomePage>
   @override
   void onVMReady(WebHomeProvider viewModel, BuildContext context) {
     viewModel.fetchLeaderboard();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      viewModel.loaded();
+    });
   }
 }

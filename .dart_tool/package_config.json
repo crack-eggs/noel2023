@@ -140,6 +140,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "fluttertoast",
+      "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/fluttertoast-8.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "functions_client",
       "rootUri": "file:///Users/duy.maid/.pub-cache/hosted/pub.dev/functions_client-1.3.2",
       "packageUri": "lib/",
@@ -656,7 +662,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-12-04T09:22:44.788842Z",
+  "generated": "2023-12-04T12:16:59.365460Z",
   "generator": "pub",
   "generatorVersion": "3.0.0"
 }

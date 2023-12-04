@@ -10,44 +10,32 @@ export const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': '*',
   'Access-Control-Allow-Methods': '*',
-  'Access-Control-Allow-Credentials': true,
   "Content-Type": "application/json",
 }
 const secretKey = 'crackegg1996';
 
 function decodeBlowfish(encodedData) {
 
-  // Chuyển đổi secretKey thành Uint8Array
   const keyUint8Array = new TextEncoder().encode(secretKey);
 
-  // Tạo đối tượng Blowfish với key
   const blowfish = new Blowfish(keyUint8Array);
 
   const arrayFromString = JSON.parse(encodedData);
 
-  // Convert the array of integers to a Uint8Array
   const uint8Array = new Uint8Array(arrayFromString);
 
-  // Ensure that the data length is a multiple of the block size
   const paddedLength = Math.ceil(uint8Array.length / Blowfish.BLOCK_SIZE) * Blowfish.BLOCK_SIZE;
   const paddedData = new Uint8Array(paddedLength);
   paddedData.set(uint8Array);
 
   const dataView = new DataView(paddedData.buffer);
 
-
-  // Giải mã từng block
   for (let i = 0; i < paddedData.length; i += Blowfish.BLOCK_SIZE) {
     blowfish.decryptBlock(dataView, i);
   }
-
-  // Trim the padding from the decrypted data
   const trimmedData = new Uint8Array(dataView.buffer, 0, uint8Array.length);
 
-
-  // Chuyển đổi DataView thành chuỗi UTF-8
   const decodedText = new TextDecoder().decode(trimmedData);
-
 
   return decodedText;
 }
@@ -70,7 +58,7 @@ Deno.serve(async (req) => {
 
     const codeSha256 = decodeBlowfish(codeParam);
     if (!codeSha256) return handleError('Nghi vấn hack: codeSha256')
-    console.log('codeSha256',codeSha256)
+    console.log('codeSha256', codeSha256)
     const parts = codeSha256.split("-");
     if (parts[0] !== 'duymaiotsv') return handleError('Nghi vấn hack: parts')
     const nowClient = parts[1];
@@ -80,7 +68,7 @@ Deno.serve(async (req) => {
     console.log('timeServe', timeServe)
     console.log('nowClient', nowClient)
 
-    if ( timeServe - 3000 > parseInt(nowClient) ) return handleError('Nghi vấn hack: timeServe')
+    // if ( timeServe - 3000 > parseInt(nowClient) ) return handleError('Nghi vấn hack: timeServe')
     const idCode = parts[2];
     let body;
     let validator;
@@ -92,6 +80,14 @@ Deno.serve(async (req) => {
         if (containsPath)
           return getLeaderBoard(supabaseClient);
 
+        const checkMatchPath = parsedUrl.pathname.includes("user/match-validate");
+        if (checkMatchPath) {
+          const matchId = parsedUrl.searchParams.get("match_id");
+
+          if (!matchId) return handleError('Match not found')
+          return matchValidate(supabaseClient, matchId)
+        }
+
         return getUserProfile(supabaseClient, email!);
       case 'PATCH':
 
@@ -99,6 +95,15 @@ Deno.serve(async (req) => {
         if (!validator) return handleError('Nghi vấn hack')
 
         body = await req.json();
+        const topupPath = parsedUrl.pathname.includes("user/topup");
+        if (topupPath) {
+          return await updateHammer(supabaseClient, email!, body)
+        }
+        const hammerPath = parsedUrl.pathname.includes("user/score");
+        if (hammerPath) {
+          return await updateScore(supabaseClient, email!, body)
+        }
+
         return await updateUser(supabaseClient, email!, body)
 
 
@@ -107,6 +112,14 @@ Deno.serve(async (req) => {
         validator = await codeValidate(supabaseClient, idCode);
         if (!validator) return handleError('Nghi vấn hack')
         body = await req.json();
+
+
+        const createMathPath = parsedUrl.pathname.includes("user/create-match");
+        if (createMathPath) {
+          return createGame(supabaseClient, body);
+        }
+
+
         return createUser(supabaseClient, body)
 
 
@@ -130,8 +143,29 @@ async function getLeaderBoard(supabase: SupabaseClient) {
   })
 }
 
+async function matchValidate(supabase: SupabaseClient, matchId: string) {
+
+  const { data: match, error } = await supabase.from('match_status').select('*').eq('id', matchId).limit(1)
+  if (error) return handleError(error)
+  if (match.length == 0) return handleError('Match not found')
+
+  return new Response(JSON.stringify(match[0].available), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    status: 200,
+  })
+}
+
 async function createUser(supabase: SupabaseClient, body) {
   const { data: users, error } = await supabase.from('users').insert([body]).select()
+  if (error) return handleError(error)
+  return new Response(JSON.stringify(users), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    status: 200,
+  })
+}
+
+async function createGame(supabase: SupabaseClient, body) {
+  const { data: users, error } = await supabase.from('match_status').insert([body])
   if (error) return handleError(error)
   return new Response(JSON.stringify(users), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -167,6 +201,7 @@ async function updateUser(supabase: SupabaseClient, email: string, body) {
       .update(body)
       .eq('email', email)
 
+
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
@@ -177,8 +212,51 @@ async function updateUser(supabase: SupabaseClient, email: string, body) {
     return handleError(e)
 
   }
-
 }
+
+
+async function updateScore(supabase: SupabaseClient, email: string, body) {
+  if (!email) return handleError('Nghi vấn hack')
+  try {
+    const { data: data, error } = await supabase.from('users')
+      .update(body)
+      .eq('email', email)
+    return new Response(JSON.stringify(data), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    })
+  }
+  catch (e) {
+    console.log('e', e)
+    return handleError(e)
+
+  }
+}
+
+
+
+async function updateHammer(supabase: SupabaseClient, email: string, body) {
+  if (!email) return handleError('Nghi vấn hack')
+  try {
+    const { data: data, error } = await supabase.from('users')
+      .update({ 'hammers': body.quantity })
+      .eq('email', email)
+
+    const { data: _, __ } = await supabase.from('topup_history')
+      .insert([body])
+      .eq('email', email)
+    return new Response(JSON.stringify(data), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    })
+  }
+  catch (e) {
+    console.log('e', e)
+    return handleError(e)
+
+  }
+}
+
 
 function handleError(error) {
   return new Response(JSON.stringify({ error: error }), {

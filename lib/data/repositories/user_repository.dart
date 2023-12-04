@@ -55,11 +55,11 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> updateScore(int score) async {
     print('UserRepositoryImpl.updateScore');
     try {
-      await dio.patch('/user', queryParameters: {
+      await dio.patch('/user/score', queryParameters: {
         'code': encryptBlowfish(),
         'email': UserService().currentUser!.email,
       }, data: {
-        'score': score
+        'score': UserService().currentUser!.score + score
       });
     } catch (e) {
       print('error: ${e.toString()}');
@@ -85,11 +85,26 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> topup(int quantity) async {
     print('UserRepositoryImpl.topup');
     try {
+      await dio.patch('/user/topup', queryParameters: {
+        'code': encryptBlowfish(),
+        'email': UserService().currentUser!.email,
+      }, data: {
+        'email': UserService().currentUser!.email,
+        'quantity': quantity,
+      });
+    } catch (e) {
+      print('error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> reduceHammer() async {
+    try {
       await dio.patch('/user', queryParameters: {
         'code': encryptBlowfish(),
         'email': UserService().currentUser!.email,
       }, data: {
-        'hammers': quantity,
+        'hammers': UserService().currentUser!.hammers - 1,
       });
     } catch (e) {
       print('error: ${e.toString()}');

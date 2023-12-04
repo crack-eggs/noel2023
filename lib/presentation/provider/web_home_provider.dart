@@ -12,6 +12,12 @@ class WebHomeProvider extends BaseViewModel {
 
   List<UserModel>? get leaderboard => _leaderboard;
 
+  bool isLoaded = false;
+
+  static const double btnLargeSize = 127;
+  static const double btnSmallSize = 110;
+  double btnSize = btnLargeSize;
+
   Future<void> fetchLeaderboard() async {
     setState(ViewState.busy);
     try {
@@ -19,6 +25,16 @@ class WebHomeProvider extends BaseViewModel {
     } catch (e) {
       print('Error fetching leaderboard: $e');
     }
+    setState(ViewState.idle);
+  }
+
+  void loaded() {
+    isLoaded = true;
+    setState(ViewState.idle);
+  }
+
+  void changeSizeButton(double size) {
+    btnSize = size;
     setState(ViewState.idle);
   }
 }
