@@ -4,16 +4,17 @@ class UserModel extends UserEntity {
   UserModel({
     required String email,
     required String displayName,
+    required String avatar,
     int score = 0,
     int hammers = 1,
     int jackpot = 0,
   }) : super(
-          email: email,
-          displayName: displayName,
-          score: score,
-          hammers: hammers,
-          jackpot: jackpot,
-        );
+            email: email,
+            displayName: displayName,
+            score: score,
+            hammers: hammers,
+            jackpot: jackpot,
+            avatar: avatar);
 
   // Create a factory constructor to convert from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +24,7 @@ class UserModel extends UserEntity {
       score: json['score'] ?? 0,
       hammers: json['hammers'] ?? 1,
       jackpot: json['jackpot'] ?? 0,
+      avatar: json['avatar'] ?? '',
     );
   }
 
@@ -34,6 +36,7 @@ class UserModel extends UserEntity {
       'score': score,
       'hammers': hammers,
       'jackpot': jackpot,
+      'avatar': avatar,
     };
   }
 }

@@ -51,7 +51,8 @@ function decodeBlowfish(encodedData) {
 }
 
 Deno.serve(async (req) => {
-  const { method } = req
+  console.log('--------')
+  const { method, url } = req
   try {
     const supabaseClient = createClient(
       'https://urdghqpqgkdhmcoecmyb.supabase.co',
@@ -64,80 +65,110 @@ Deno.serve(async (req) => {
 
     const codeParam = parsedUrl.searchParams.get("code");
     const email = parsedUrl.searchParams.get("email");
-    const type = parsedUrl.searchParams.get("type");
-    console.log('method', method)
-    console.log(type)
 
-    const code = decodeBlowfish(codeParam);
-    const parts = code.split("-");
+    const codeSha256 = decodeBlowfish(codeParam);
+    if (!codeSha256) return handleError('Nghi vấn hack: codeSha256')
+
+    const parts = codeSha256.split("-");
+    if (parts[0] !== 'duymaiotsv') return handleError('Nghi vấn hack: parts')
+    const idCode = parts[1];
+    let body;
+    let validator;
+
+    switch (method) {
+      case 'GET':
+        // Kiểm tra xem đoạn path có chứa "user/leaderboard" hay không
+        const containsPath = parsedUrl.pathname.includes("user/leaderboard");
+        if (containsPath)
+          return getLeaderBoard(supabaseClient);
+
+        return getUserProfile(supabaseClient, email!);
+      case 'PATCH':
+
+        validator = await codeValidate(supabaseClient, idCode);
+        if (!validator) return handleError('Nghi vấn hack')
+
+        body = await req.json();
+        return await updateUser(supabaseClient, email!, body)
 
 
-    console.log('type', type)
-    console.log('code', code)
-    console.log('method', method)
+      case 'POST':
 
-    if (type === 'select') {
+        validator = await codeValidate(supabaseClient, idCode);
+        if (!validator) return handleError('Nghi vấn hack')
+        body = await req.json();
+        return createUser(supabaseClient, body)
 
-      const { data: users, error } = await supabaseClient.from('users').select('*').eq('email', email).limit(1)
-      if (error) return handleError(error)
-      return new Response(JSON.stringify(users), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      })
+
+      default:
+        handleError('Erorr')
     }
 
+  } catch (e) {
+    handleError('Erorr')
 
-    const body = await req.json();
-
-
-    if (!code) handleError('Nghi vấn hack')
-    console.log('parst', parts[0])
-
-    if (parts[0] === 'duymaiotsv') {
-      const idCode = parts[1];
-      console.log('idCode', idCode)
-      const { data: code, error } = await supabaseClient.from('codes').select('*').eq('code_id', idCode).limit(1)
-      if (code && code.length == 0) {
-        await supabaseClient.from('codes').insert([{ 'code_id': idCode }])
-
-        if (type === 'update') {
-          const { data: data, error } = await supabaseClient.from('users')
-            .update(body)
-            .eq('email', email).select()
-          if (error) return handleError(error)
-          return new Response(JSON.stringify(data), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 200,
-          })
-        }
-        console.log('nhay vao day 2')
-
-        if (type === 'insert') {
-          /// create user
-          const { data: users, error } = await supabaseClient.from('users').insert([body]).select()
-          if (error) return handleError(error)
-          return new Response(JSON.stringify(users), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 200,
-          })
-        }
-        console.log('nhay vao day 4')
-
-      } else {
-        return handleError('Phát hiện nghi vấn hack')
-      }
-    } else {
-      return handleError('Phát hiện nghi vấn hack')
-    }
-    console.log('nhay vao day 5')
-
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400,
-    })
   }
 })
+
+async function getLeaderBoard(supabase: SupabaseClient) {
+
+  const { data: users, error } = await supabase.from('users').select('*').order('score', { ascending: false }).limit(20)
+  if (error) return handleError(error)
+  return new Response(JSON.stringify(users), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    status: 200,
+  })
+}
+
+async function createUser(supabase: SupabaseClient, body) {
+  const { data: users, error } = await supabase.from('users').insert([body]).select()
+  if (error) return handleError(error)
+  return new Response(JSON.stringify(users), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    status: 200,
+  })
+}
+
+async function getUserProfile(supabase: SupabaseClient, email: string) {
+  if (!email) return handleError('Nghi vấn hack')
+
+
+  const { data: users, error } = await supabase.from('users').select('*').eq('email', email).limit(1)
+  if (error) return handleError(error)
+  return new Response(JSON.stringify(users), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    status: 200,
+  })
+}
+
+async function codeValidate(supabase: SupabaseClient, code: string): Promise<boolean> {
+  const { data: data, error } = await supabase.from('codes').select('*').eq('code_id', code).limit(1)
+  if (data.length > 0) {
+    return false
+  }
+  await supabase.from('codes').insert([{ 'code_id': code }])
+  return true;
+}
+
+async function updateUser(supabase: SupabaseClient, email: string, body) {
+  if (!email) return handleError('Nghi vấn hack')
+  try {
+    const { data: data, error } = await supabase.from('users')
+      .update(body)
+      .eq('email', email)
+
+    return new Response(JSON.stringify(data), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    })
+  }
+  catch (e) {
+    console.log('e', e)
+    return handleError(e)
+
+  }
+
+}
 
 function handleError(error) {
   return new Response(JSON.stringify({ error: error }), {
