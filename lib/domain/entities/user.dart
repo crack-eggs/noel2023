@@ -4,6 +4,7 @@ class UserEntity {
   final int score;
   final int hammers;
   final int jackpot;
+  final String avatar;
 
   UserEntity({
     required this.email,
@@ -11,5 +12,6 @@ class UserEntity {
     required this.score,
     required this.hammers,
     required this.jackpot,
+    required this.avatar,
   });
 }

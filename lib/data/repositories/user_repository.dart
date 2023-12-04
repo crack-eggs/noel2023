@@ -13,11 +13,15 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<void> signInGoogle({GoogleSignInUserData? userData}) async {
-    UserService().saveUser(
-        UserModel(email: userData!.email, displayName: userData.displayName!));
+    UserService().saveUser(UserModel(
+        email: userData!.email,
+        displayName: userData.displayName!,
+        avatar: userData.photoUrl ?? ''));
     try {
-      await createUser(
-          UserModel(email: userData.email, displayName: userData.displayName!));
+      await createUser(UserModel(
+          email: userData.email,
+          displayName: userData.displayName!,
+          avatar: userData.photoUrl ?? ''));
     } catch (e) {
       print('error: ${e.toString()}');
     } finally {
