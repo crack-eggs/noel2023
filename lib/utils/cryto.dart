@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 String secretKey = 'crackegg1996';
 
 String code() {
-  return 'duymaiotsv-${Uuid().v4().replaceAll('-', '')}';
+  return 'duymaiotsv-${DateTime.now().microsecondsSinceEpoch}-${const Uuid().v4().replaceAll('-', '')}';
 }
 
 String encryptBlowfish() {

@@ -10,6 +10,7 @@ export const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': '*',
   'Access-Control-Allow-Methods': '*',
+  'Access-Control-Allow-Credentials': true,
   "Content-Type": "application/json",
 }
 const secretKey = 'crackegg1996';
@@ -69,10 +70,18 @@ Deno.serve(async (req) => {
 
     const codeSha256 = decodeBlowfish(codeParam);
     if (!codeSha256) return handleError('Nghi vấn hack: codeSha256')
-
+    console.log('codeSha256',codeSha256)
     const parts = codeSha256.split("-");
     if (parts[0] !== 'duymaiotsv') return handleError('Nghi vấn hack: parts')
-    const idCode = parts[1];
+    const nowClient = parts[1];
+    var currentDate = new Date();
+    var timeServe = currentDate.getTime() * 1000;
+    // compare nowClient and timeServe
+    console.log('timeServe', timeServe)
+    console.log('nowClient', nowClient)
+
+    if ( timeServe - 3000 > parseInt(nowClient) ) return handleError('Nghi vấn hack: timeServe')
+    const idCode = parts[2];
     let body;
     let validator;
 
