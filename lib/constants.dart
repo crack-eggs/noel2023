@@ -13,7 +13,7 @@ final supabase = SupabaseClient(
 
 // Supabase Realtime Channel
 final gameChannel = supabase.channel('game',
-    opts: const RealtimeChannelConfig(self: true, ack: true));
+    opts: const RealtimeChannelConfig());
 
 final GoogleSignInPlugin googleSignIn =
 GoogleSignInPlatform.instance as GoogleSignInPlugin;

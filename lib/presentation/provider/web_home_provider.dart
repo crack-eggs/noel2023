@@ -62,7 +62,8 @@ class WebHomeProvider extends BaseViewModel {
         ChannelFilter(
           event: EventType.startTap.name,
         ), (payload, [ref]) {
-      Navigator.pop(navigatorService.context!);
+
+      Navigator.maybePop(navigatorService.context!);
 
       Navigator.popAndPushNamed(navigatorService.context!, '/web-game-play');
     });
