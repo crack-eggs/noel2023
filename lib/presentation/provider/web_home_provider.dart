@@ -60,7 +60,7 @@ class WebHomeProvider extends BaseViewModel {
     gameChannel.on(
         RealtimeListenTypes.broadcast,
         ChannelFilter(
-          event: EventType.startTap.name,
+          event: EventType.start.name,
         ), (payload, [ref]) {
 
       Navigator.maybePop(navigatorService.context!);
