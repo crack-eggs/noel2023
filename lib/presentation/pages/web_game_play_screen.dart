@@ -18,9 +18,19 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
 
   @override
   Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
-      child: const Icon(Icons.egg_outlined, size: 300),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Column(
+        children: [
+          RotationTransition(
+            turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
+            child: const Icon(Icons.egg_outlined, size: 300),
+          ),
+          ElevatedButton(onPressed: (){
+            Navigator.popAndPushNamed(context, '/');
+          }, child: const Text('Back'))
+        ],
+      ),
     );
   }
 
@@ -38,8 +48,13 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
-    viewModel
-        .setController(_controller);
+    viewModel.setController(_controller);
     viewModel.init();
+  }
+
+  @override
+  void dispose() {
+    print('_WebGamePlayScreenState.dispose');
+    super.dispose();
   }
 }

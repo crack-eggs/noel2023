@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:noel/service/event_in_app.dart';
 import 'package:noel/utils/toast.dart';
 import '../shared/base_view_model.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../../constants.dart';
 import '../../enums.dart';
 
 class WebGameProvider extends BaseViewModel {
@@ -48,6 +45,7 @@ class WebGameProvider extends BaseViewModel {
 
   @override
   void dispose() {
+    print('WebGameProvider.dispose');
     _controller.dispose();
     _sub?.cancel();
     super.dispose();
