@@ -43,7 +43,7 @@ class _SignInGoogleScreenState extends State<SignInGoogleScreen>
                   child: CircularProgressIndicator(),
                 )
               : Center(
-                  child: UserService().currentUser != null
+                  child: UserService().currentUser == null
                       ? ButtonConfiguratorDemo(
                           onUserSignInSuccess:
                               (GoogleSignInUserData? userData) async {
