@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:noel/enums.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -5,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../../constants.dart';
 import '../../data/models/user_model.dart';
 import '../../domain/usecases/leader_board_usecase.dart';
+import '../../service/event_in_app.dart';
 import '../shared/base_view_model.dart';
 
 class WebHomeProvider extends BaseViewModel {
@@ -23,6 +26,8 @@ class WebHomeProvider extends BaseViewModel {
   double btnSize = btnLargeSize;
 
   String _uuid = '';
+
+  StreamSubscription? _sub;
 
   String getUUID() {
     _uuid = const Uuid().v4();
@@ -56,15 +61,18 @@ class WebHomeProvider extends BaseViewModel {
   }
 
   _watch() {
-    startChannel.on(
-        RealtimeListenTypes.broadcast,
-        ChannelFilter(
-          event: EventType.start.name,
-        ), (payload, [ref]) {
+    _sub ??= EventInApp().controller.stream.listen((event) {
+      if (event.eventType == EventType.start) {
+        Navigator.maybePop(navigatorService.context!);
 
-      Navigator.maybePop(navigatorService.context!);
-
-      Navigator.popAndPushNamed(navigatorService.context!, '/web-game-play');
+        Navigator.popAndPushNamed(navigatorService.context!, '/web-game-play');
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
   }
 }

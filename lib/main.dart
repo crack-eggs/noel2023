@@ -8,6 +8,7 @@ import 'package:google_sign_in_platform_interface/google_sign_in_platform_interf
 import 'package:noel/presentation/pages/home_page.dart';
 
 import 'package:noel/route.dart';
+import 'package:noel/service/event_in_app.dart';
 import 'package:noel/service/realtime_service.dart';
 import 'package:noel/service/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,8 +40,10 @@ void main() async {
     ],
   ));
 
+
   prefs = await SharedPreferences.getInstance();
   init();
+  EventInApp();
   sl<RealtimeService>();
   AppRouter.setupRouter();
   UserService();

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:noel/service/event_in_app.dart';
 import 'package:noel/utils/toast.dart';
 import '../shared/base_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -9,10 +12,7 @@ import '../../enums.dart';
 class WebGameProvider extends BaseViewModel {
   late AnimationController _controller;
 
-  RealtimeChannel? _startTapSub;
-  RealtimeChannel? _stopTapSub;
-  RealtimeChannel? _getGiftSub;
-  RealtimeChannel? _reStartSub;
+  StreamSubscription? _sub;
 
   WebGameProvider(super.supabase, super.navigatorService);
 
@@ -25,49 +25,31 @@ class WebGameProvider extends BaseViewModel {
   }
 
   void _watch() {
-    _startTapSub ??= startTapChannel.on(
-        RealtimeListenTypes.broadcast,
-        ChannelFilter(
-          event: EventType.startTap.name,
-        ), (payload, [ref]) {
-      print('start tap');
-      _controller.repeat();
-    });
+    _sub ??= EventInApp().controller.stream.listen((event) {
+      print('event: $event');
+      if (event.eventType == EventType.restartGame) {
+        _controller.repeat();
+      }
 
-    stopTapChannel.on(
-        RealtimeListenTypes.broadcast,
-        ChannelFilter(
-          event: EventType.stopTap.name,
-        ), (payload, [ref]) {
-      print('stop tap');
-      _controller.stop();
-    });
+      if (event.eventType == EventType.startTap) {
+        _controller.repeat();
+      }
 
-    getGiftChannel.on(
-        RealtimeListenTypes.broadcast,
-        ChannelFilter(
-          event: EventType.getGift.name,
-        ), (payload, [ref]) {
-      print('payload: $payload');
-      AppToast.show(
-          'Chuc mung ban nhan duoc qua: ${payload['payload']['gift']}');
-    });
+      if (event.eventType == EventType.stopTap) {
+        _controller.stop();
+      }
 
-    _reStartSub ??= restartGameChannel.on(
-        RealtimeListenTypes.broadcast,
-        ChannelFilter(
-          event: EventType.restartGame.name,
-        ), (payload, [ref]) {
-      _controller.repeat();
+      if (event.eventType == EventType.getGift) {
+        AppToast.show(
+            'Chuc mung ban nhan duoc qua: ${event.payload['payload']['gift']}');
+      }
     });
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _stopTapSub?.onClose(() {});
-    _startTapSub?.onClose(() {});
-    _getGiftSub?.onClose(() {});
+    _sub?.cancel();
     super.dispose();
   }
 }

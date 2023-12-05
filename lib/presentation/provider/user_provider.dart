@@ -1,8 +1,7 @@
 import 'package:noel/domain/usecases/game_usecase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../constants.dart';
 import '../../domain/usecases/user_usecase.dart';
+import '../../service/event_in_app.dart';
 import '../../service/user_service.dart';
 import '../shared/base_view_model.dart';
 
@@ -45,7 +44,7 @@ class UserProvider extends BaseViewModel {
       await userUsecase.reduceHammer();
       await Future.wait([
         userUsecase.fetch(),
-        startChannel.send(
+        EventInApp().gameChannel.send(
             type: RealtimeListenTypes.broadcast,
             event: EventType.start.name,
             payload: {})

@@ -15,23 +15,6 @@ final supabase = SupabaseClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVyZGdocXBxZ2tkaG1jb2VjbXliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDExMzUyMTMsImV4cCI6MjAxNjcxMTIxM30.cZM2G8RvkA0CzznAAZNi7sGc0QDDviCQ7jjWRHpAUeU',
 );
 
-// Supabase Realtime Channel
-
-final startChannel =
-    supabase.channel('start', opts: const RealtimeChannelConfig());
-
-final startTapChannel =
-    supabase.channel('startTap', opts: const RealtimeChannelConfig());
-
-final stopTapChannel =
-    supabase.channel('stopTap', opts: const RealtimeChannelConfig());
-
-final getGiftChannel =
-    supabase.channel('getGift', opts: const RealtimeChannelConfig());
-
-final restartGameChannel =
-    supabase.channel('restartGame', opts: const RealtimeChannelConfig());
-
 final GoogleSignInPlugin googleSignIn =
     GoogleSignInPlatform.instance as GoogleSignInPlugin;
 

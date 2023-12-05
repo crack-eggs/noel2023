@@ -7,6 +7,7 @@ import '../../data/models/game_model.dart';
 import '../../domain/usecases/game_usecase.dart';
 import '../../domain/usecases/user_usecase.dart';
 import '../../enums.dart';
+import '../../service/event_in_app.dart';
 import '../../service/navigator_service.dart';
 import '../../service/user_service.dart';
 import '../shared/base_view_model.dart';
@@ -31,7 +32,7 @@ class MobileGameProvider extends BaseViewModel {
     print('MobileGameProvider.onUserStopTap');
     stateGame = StateGame.end;
     setState(ViewState.idle);
-    stopTapChannel.send(
+    EventInApp().gameChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.stopTap.name,
         payload: {});
@@ -41,7 +42,7 @@ class MobileGameProvider extends BaseViewModel {
     print('MobileGameProvider.onUserGetGift');
     setState(ViewState.busy);
     final random = Random().nextInt(100);
-    getGiftChannel.send(
+    EventInApp().gameChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.getGift.name,
         payload: {'type': 1, 'gift': random});
@@ -70,7 +71,7 @@ class MobileGameProvider extends BaseViewModel {
       await usecase.fetch();
 
       stateGame = StateGame.start;
-      restartGameChannel.send(
+      EventInApp().gameChannel.send(
           type: RealtimeListenTypes.broadcast,
           event: EventType.restartGame.name,
           payload: {});
@@ -83,7 +84,7 @@ class MobileGameProvider extends BaseViewModel {
     setState(ViewState.busy);
 
     stateGame = StateGame.start;
-    startTapChannel.send(
+    EventInApp().gameChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.startTap.name,
         payload: {});
