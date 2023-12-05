@@ -65,7 +65,7 @@ class WebHomeProvider extends BaseViewModel {
       if (event.eventType == EventType.start) {
         Navigator.maybePop(navigatorService.context!);
 
-        Navigator.popAndPushNamed(navigatorService.context!, '/web-game-play');
+        Navigator.pushNamed(navigatorService.context!, '/web-game-play');
       }
     });
   }

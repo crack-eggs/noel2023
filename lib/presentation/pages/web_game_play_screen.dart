@@ -26,9 +26,11 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
             turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
             child: const Icon(Icons.egg_outlined, size: 300),
           ),
-          ElevatedButton(onPressed: (){
-            Navigator.popAndPushNamed(context, '/');
-          }, child: const Text('Back'))
+          ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Back'))
         ],
       ),
     );
