@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:noel/enums.dart';
-import 'package:noel/service/navigator_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import '../../constants.dart';

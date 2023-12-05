@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/foundation.dart';
 
+final isWebMobile = kIsWeb &&
+    (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android);
 
 // Supabase Constants
 final supabase = SupabaseClient(
@@ -12,13 +16,12 @@ final supabase = SupabaseClient(
 );
 
 // Supabase Realtime Channel
-final gameChannel = supabase.channel('game',
-    opts: const RealtimeChannelConfig());
+final gameChannel =
+    supabase.channel('game', opts: const RealtimeChannelConfig());
 
 final GoogleSignInPlugin googleSignIn =
-GoogleSignInPlatform.instance as GoogleSignInPlugin;
+    GoogleSignInPlatform.instance as GoogleSignInPlugin;
 
 const Color primaryColor = Color(0xFFBD0F72);
-
 
 String colorToast = 'linear-gradient(to right, #BD0F72, #BD0F72)';
