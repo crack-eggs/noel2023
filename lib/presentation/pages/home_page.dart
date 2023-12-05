@@ -71,7 +71,6 @@ class _HomePageState extends State<HomePage>
                   fit: BoxFit.fitWidth,
                 ),
               ),
-
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -84,7 +83,6 @@ class _HomePageState extends State<HomePage>
                       viewModel.changeSizeButton(WebHomeProvider.btnSmallSize);
                       await Future.delayed(const Duration(milliseconds: 100));
                       viewModel.changeSizeButton(WebHomeProvider.btnLargeSize);
-
                     },
                     child: SvgPicture.asset(
                       'assets/home/start_button.svg',
@@ -184,25 +182,23 @@ class _HomePageState extends State<HomePage>
         children: [
           Image.asset(
             'assets/home/bua.png',
-            width: 20,
-            height: 20,
+            width: 22,
           ),
           const SizedBox(width: 2),
           Text(hammer.toString(),
               style: GoogleFonts.lilitaOne(
-                textStyle: const TextStyle(color: Colors.white),
+                textStyle: const TextStyle(color: Colors.white, fontSize: 18),
               )),
           const SizedBox(width: 8),
           Image.asset(
             'assets/home/caythong.png',
-            width: 20,
-            height: 20,
+            width: 22,
           ),
           const SizedBox(width: 2),
           Text(
             score.toString(),
             style: GoogleFonts.lilitaOne(
-                textStyle: const TextStyle(color: Colors.white)),
+                textStyle: const TextStyle(color: Colors.white, fontSize: 18)),
           ),
         ],
       ),

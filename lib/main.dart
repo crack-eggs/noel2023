@@ -19,7 +19,7 @@ import 'service/navigator_service.dart';
 late SharedPreferences prefs;
 final dio = Dio(
   BaseOptions(
-      baseUrl: 'https://urdghqpqgkdhmcoecmyb.supabase.co/functions/v1',
+      baseUrl: 'https://ots.space/apps/crackeggs-2023/fn/v1',
       headers: {
         'Content-Type': 'application/json',
         'apikey':
