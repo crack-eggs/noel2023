@@ -56,7 +56,7 @@ class WebHomeProvider extends BaseViewModel {
   }
 
   _watch() {
-    gameChannel.on(
+    startChannel.on(
         RealtimeListenTypes.broadcast,
         ChannelFilter(
           event: EventType.start.name,

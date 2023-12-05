@@ -31,7 +31,7 @@ class MobileGameProvider extends BaseViewModel {
     print('MobileGameProvider.onUserStopTap');
     stateGame = StateGame.end;
     setState(ViewState.idle);
-    gameChannel.send(
+    stopTapChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.stopTap.name,
         payload: {});
@@ -41,7 +41,7 @@ class MobileGameProvider extends BaseViewModel {
     print('MobileGameProvider.onUserGetGift');
     setState(ViewState.busy);
     final random = Random().nextInt(100);
-    gameChannel.send(
+    getGiftChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.getGift.name,
         payload: {'type': 1, 'gift': random});
@@ -70,7 +70,7 @@ class MobileGameProvider extends BaseViewModel {
       await usecase.fetch();
 
       stateGame = StateGame.start;
-      gameChannel.send(
+      restartGameChannel.send(
           type: RealtimeListenTypes.broadcast,
           event: EventType.restartGame.name,
           payload: {});
@@ -83,7 +83,7 @@ class MobileGameProvider extends BaseViewModel {
     setState(ViewState.busy);
 
     stateGame = StateGame.start;
-    gameChannel.send(
+    startTapChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.startTap.name,
         payload: {});

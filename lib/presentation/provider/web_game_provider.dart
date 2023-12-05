@@ -25,7 +25,7 @@ class WebGameProvider extends BaseViewModel {
   }
 
   void _watch() {
-    _startTapSub ??= gameChannel.on(
+    _startTapSub ??= startTapChannel.on(
         RealtimeListenTypes.broadcast,
         ChannelFilter(
           event: EventType.startTap.name,
@@ -34,7 +34,7 @@ class WebGameProvider extends BaseViewModel {
       _controller.repeat();
     });
 
-    _stopTapSub ??= gameChannel.on(
+    stopTapChannel.on(
         RealtimeListenTypes.broadcast,
         ChannelFilter(
           event: EventType.stopTap.name,
@@ -43,7 +43,7 @@ class WebGameProvider extends BaseViewModel {
       _controller.stop();
     });
 
-    _getGiftSub ??= gameChannel.on(
+    getGiftChannel.on(
         RealtimeListenTypes.broadcast,
         ChannelFilter(
           event: EventType.getGift.name,
@@ -53,7 +53,7 @@ class WebGameProvider extends BaseViewModel {
           'Chuc mung ban nhan duoc qua: ${payload['payload']['gift']}');
     });
 
-    _reStartSub ??= gameChannel.on(
+    _reStartSub ??= restartGameChannel.on(
         RealtimeListenTypes.broadcast,
         ChannelFilter(
           event: EventType.restartGame.name,
@@ -65,6 +65,9 @@ class WebGameProvider extends BaseViewModel {
   @override
   void dispose() {
     _controller.dispose();
+    _stopTapSub?.onClose(() {});
+    _startTapSub?.onClose(() {});
+    _getGiftSub?.onClose(() {});
     super.dispose();
   }
 }

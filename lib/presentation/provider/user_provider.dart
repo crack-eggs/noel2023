@@ -45,7 +45,7 @@ class UserProvider extends BaseViewModel {
       await userUsecase.reduceHammer();
       await Future.wait([
         userUsecase.fetch(),
-        gameChannel.send(
+        startChannel.send(
             type: RealtimeListenTypes.broadcast,
             event: EventType.start.name,
             payload: {})
