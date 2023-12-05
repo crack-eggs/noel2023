@@ -28,8 +28,8 @@ class EventInApp {
   final controller = StreamController<EventModel>.broadcast();
 
   // Supabase Realtime Channel
-  final gameChannel =
-      supabase.channel('game', opts: const RealtimeChannelConfig());
+  final gameChannel = supabase.channel('game',
+      opts: const RealtimeChannelConfig(ack: true, self: true));
 
   // Supabase Realtime Subscription
   _watch() {
