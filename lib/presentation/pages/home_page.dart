@@ -81,14 +81,17 @@ class _HomePageState extends State<HomePage>
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     margin: EdgeInsets.only(
-                        bottom: viewModel.btnSize == WebHomeProvider.btnLargeSize
-                            ? 12
-                            : 20),
+                        bottom:
+                            viewModel.btnSize == WebHomeProvider.btnLargeSize
+                                ? 12
+                                : 20),
                     child: GestureDetector(
                       onTap: () async {
-                        viewModel.changeSizeButton(WebHomeProvider.btnSmallSize);
+                        viewModel
+                            .changeSizeButton(WebHomeProvider.btnSmallSize);
                         await Future.delayed(const Duration(milliseconds: 100));
-                        viewModel.changeSizeButton(WebHomeProvider.btnLargeSize);
+                        viewModel
+                            .changeSizeButton(WebHomeProvider.btnLargeSize);
                         showQrCode();
                       },
                       child: SvgPicture.asset(
@@ -146,23 +149,22 @@ class _HomePageState extends State<HomePage>
               right: 0,
               child: consumer(
                 builder: (BuildContext context, WebHomeProvider viewModel, _) =>
-                    viewModel.state == ViewState.busy ||
-                            viewModel.leaderboard == null
+                    viewModel.leaderboard == null
                         ? const SizedBox()
                         : SizedBox(
                             height: 230,
                             child: ListView.separated(
-                              itemCount: 20,
+                              itemCount: viewModel.leaderboard!.length,
                               physics: const AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return _buildItemLeaderboard(
-                                  hammer: viewModel.leaderboard!.first.hammers,
+                                  hammer: viewModel.leaderboard![index].hammers,
                                   name:
-                                      viewModel.leaderboard!.first.displayName,
-                                  score: viewModel.leaderboard!.first.score
+                                      viewModel.leaderboard![index].displayName,
+                                  score: viewModel.leaderboard![index].score
                                       .toString(),
-                                  avatar: viewModel.leaderboard!.first.avatar,
+                                  avatar: viewModel.leaderboard![index].avatar,
                                 );
                               },
                               separatorBuilder: (context, index) {
@@ -235,6 +237,10 @@ class _HomePageState extends State<HomePage>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       viewModel.loaded();
     });
+    viewModel.watch(onEvent: () {
+
+      Navigator.popAndPushNamed(context, '/web-game-play');
+    });
   }
 
   void showQrCode() {
@@ -288,6 +294,7 @@ class _HomePageState extends State<HomePage>
       },
     );
   }
+
   @override
   void dispose() {
     viewModel.dispose();

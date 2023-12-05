@@ -29,6 +29,8 @@ class WebHomeProvider extends BaseViewModel {
 
   StreamSubscription? _sub;
 
+  Timer? _timer;
+
   String getUUID() {
     _uuid = const Uuid().v4();
     print('_uuid: $_uuid');
@@ -57,15 +59,15 @@ class WebHomeProvider extends BaseViewModel {
 
   void init() {
     fetchLeaderboard();
-    _watch();
+    _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) {
+      fetchLeaderboard();
+    });
   }
 
-  _watch() {
+  watch({required Function onEvent}) {
     _sub ??= EventInApp().controller.stream.listen((event) {
       if (event.eventType == EventType.start) {
-        Navigator.maybePop(navigatorService.context!);
-
-        Navigator.pushNamed(navigatorService.context!, '/web-game-play');
+        onEvent();
       }
     });
   }

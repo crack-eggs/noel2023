@@ -56,7 +56,7 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
 
   @override
   void dispose() {
-    print('_WebGamePlayScreenState.dispose');
+    viewModel.dispose();
     super.dispose();
   }
 }
