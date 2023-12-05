@@ -1,10 +1,11 @@
 import 'package:noel/domain/usecases/game_usecase.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../constants.dart';
 import '../../domain/usecases/user_usecase.dart';
 import '../../service/user_service.dart';
 import '../shared/base_view_model.dart';
 
-import '../../data/models/topup_history_model.dart';
 import '../../enums.dart';
 import '../../route.dart';
 
@@ -42,7 +43,14 @@ class UserProvider extends BaseViewModel {
     }
     if (UserService().currentUser!.hammers > 0) {
       await userUsecase.reduceHammer();
-      await userUsecase.fetch();
+      await Future.wait([
+        userUsecase.fetch(),
+        gameChannel.send(
+            type: RealtimeListenTypes.broadcast,
+            event: EventType.start.name,
+            payload: {})
+      ]);
+
       AppRouter.router.navigateTo(
           navigatorService.context!, '/mobile-game-play?match_id=$matchId');
     }

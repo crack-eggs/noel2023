@@ -28,6 +28,7 @@ class SignInGoogleProvider extends BaseViewModel {
     setState(ViewState.busy);
     try {
       await gameUsecase.createMatch(id: matchId);
+
     } catch (e) {
       onFailure();
       return;

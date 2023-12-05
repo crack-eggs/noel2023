@@ -1,4 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:noel/enums.dart';
+import 'package:noel/service/navigator_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
+import '../../constants.dart';
 import '../../data/models/user_model.dart';
 import '../../domain/usecases/leader_board_usecase.dart';
 import '../shared/base_view_model.dart';
@@ -18,6 +23,14 @@ class WebHomeProvider extends BaseViewModel {
   static const double btnSmallSize = 110;
   double btnSize = btnLargeSize;
 
+  String _uuid = '';
+
+  String getUUID() {
+    _uuid = const Uuid().v4();
+    print('_uuid: $_uuid');
+    return _uuid;
+  }
+
   Future<void> fetchLeaderboard() async {
     setState(ViewState.busy);
     try {
@@ -36,5 +49,22 @@ class WebHomeProvider extends BaseViewModel {
   void changeSizeButton(double size) {
     btnSize = size;
     setState(ViewState.idle);
+  }
+
+  void init() {
+    fetchLeaderboard();
+    _watch();
+  }
+
+  _watch() {
+    gameChannel.on(
+        RealtimeListenTypes.broadcast,
+        ChannelFilter(
+          event: EventType.startTap.name,
+        ), (payload, [ref]) {
+      Navigator.pop(navigatorService.context!);
+
+      Navigator.popAndPushNamed(navigatorService.context!, '/web-game-play');
+    });
   }
 }

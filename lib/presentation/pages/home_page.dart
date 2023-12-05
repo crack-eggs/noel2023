@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tiengviet/tiengviet.dart';
 
 import '../../enums.dart';
@@ -31,6 +32,9 @@ class _HomePageState extends State<HomePage>
           ),
           child: Stack(
             children: [
+              Container(
+                color: Colors.black45,
+              ),
               AnimatedPositioned(
                 left: 0,
                 right: 0,
@@ -45,25 +49,25 @@ class _HomePageState extends State<HomePage>
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.only(bottom: 50),
                   child: Image.asset(
                     'assets/home/egg_center.png',
-                    width: 400,
-                    fit: BoxFit.fitWidth,
+                    height: 500,
+                    fit: BoxFit.fitHeight,
                   ),
                 ),
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height / 12,
-                left: MediaQuery.of(context).size.width / 2 + 20,
+                left: MediaQuery.of(context).size.width / 2 + 80,
                 child: Image.asset(
                   'assets/home/egg_1.png',
-                  width: 200,
-                  fit: BoxFit.fitWidth,
+                  width: 250,
+                  fit: BoxFit.fitHeight,
                 ),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height / 8,
+                bottom: MediaQuery.of(context).size.height / 7,
                 right: MediaQuery.of(context).size.width / 5 * 2 + 30,
                 child: Image.asset(
                   'assets/home/egg_2.png',
@@ -83,6 +87,7 @@ class _HomePageState extends State<HomePage>
                       viewModel.changeSizeButton(WebHomeProvider.btnSmallSize);
                       await Future.delayed(const Duration(milliseconds: 100));
                       viewModel.changeSizeButton(WebHomeProvider.btnLargeSize);
+                      showQrCode();
                     },
                     child: SvgPicture.asset(
                       'assets/home/start_button.svg',
@@ -119,13 +124,13 @@ class _HomePageState extends State<HomePage>
         children: [
           Image.asset(
             'assets/home/leaderboard.png',
-            width: 300,
-            fit: BoxFit.fitWidth,
+            height: 500,
+            fit: BoxFit.fitHeight,
           ),
           Positioned(
             left: 0,
             right: 0,
-            top: 130,
+            top: 125,
             child: Image.asset(
               'assets/home/leaderboard_text.png',
               fit: BoxFit.fitHeight,
@@ -133,22 +138,36 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           Positioned(
-              bottom: 230,
+              top: 220,
               left: 40,
               right: 0,
               child: consumer(
                 builder: (BuildContext context, WebHomeProvider viewModel, _) =>
                     viewModel.state == ViewState.busy ||
                             viewModel.leaderboard == null
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : _buildItemLeaderboard(
-                            hammer: viewModel.leaderboard!.first.hammers,
-                            name: viewModel.leaderboard!.first.displayName,
-                            score:
-                                viewModel.leaderboard!.first.score.toString(),
-                            avatar: viewModel.leaderboard!.first.avatar,
+                        ? const SizedBox()
+                        : SizedBox(
+                            height: 230,
+                            child: ListView.separated(
+                              itemCount: 20,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                return _buildItemLeaderboard(
+                                  hammer: viewModel.leaderboard!.first.hammers,
+                                  name:
+                                      viewModel.leaderboard!.first.displayName,
+                                  score: viewModel.leaderboard!.first.score
+                                      .toString(),
+                                  avatar: viewModel.leaderboard!.first.avatar,
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(
+                                  height: 12,
+                                );
+                              },
+                            ),
                           ),
               ))
         ],
@@ -174,6 +193,8 @@ class _HomePageState extends State<HomePage>
       title: Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Text(TiengViet.parse(name).toUpperCase(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: GoogleFonts.lilitaOne(
               textStyle: const TextStyle(color: Colors.white),
             )),
@@ -207,9 +228,61 @@ class _HomePageState extends State<HomePage>
 
   @override
   void onVMReady(WebHomeProvider viewModel, BuildContext context) {
-    viewModel.fetchLeaderboard();
+    viewModel.init();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       viewModel.loaded();
     });
+  }
+
+  void showQrCode() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              width: 1300,
+              height: 650,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                image: const DecorationImage(
+                  image: AssetImage('assets/home/qr_popup.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 70),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text(
+                        'To verify yourself\nPlease scan this QR code with your phone',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    QrImageView(
+                      data:
+                          'http://localhost:10000/#/login?match_id=${viewModel.getUUID()}',
+                      size: 220,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }

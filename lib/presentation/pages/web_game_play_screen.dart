@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../provider/web_game_provider.dart';
 import '../shared/base_view.dart';
@@ -41,5 +40,6 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
     );
     viewModel
         .setController(_controller);
+    viewModel.init();
   }
 }

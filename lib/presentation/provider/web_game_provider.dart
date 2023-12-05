@@ -14,6 +14,10 @@ class WebGameProvider extends BaseViewModel {
     _controller = controller;
   }
 
+  init(){
+    _watch();
+  }
+
   void _watch() {
     gameChannel.on(
         RealtimeListenTypes.broadcast,

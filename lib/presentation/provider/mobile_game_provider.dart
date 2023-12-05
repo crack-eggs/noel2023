@@ -53,19 +53,7 @@ class MobileGameProvider extends BaseViewModel {
 
   void onUserTap() {
     onUserStopTap();
-
     onUserGetGift();
-    // if (countTap == 0) {
-    //   onUserStartTap();
-    // }
-    //
-    // if (countTap == 1) {
-    //   onUserStopTap();
-    //
-    //   onUserGetGift();
-    //   countTap = 0;
-    // }
-    // countTap++;
   }
 
   void onUserContinue({required Function onFailure}) async {
