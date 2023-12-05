@@ -24,4 +24,4 @@ final GoogleSignInPlugin googleSignIn =
 
 const Color primaryColor = Color(0xFFBD0F72);
 
-String colorToast = 'linear-gradient(to right, #BD0F72, #BD0F72)';
+String colorToastError = 'linear-gradient(to right, #BD0F72, #BD0F72)';
