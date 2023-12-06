@@ -48,7 +48,7 @@ class GameRepositoryImpl implements GameRepository {
   @override
   Future<bool> checkGameValidation(String id) async {
     try {
-      final result =  await dio.get(
+      final result = await dio.get(
         '/user/match-validate',
         queryParameters: {
           'code': encryptBlowfish(),
@@ -59,6 +59,24 @@ class GameRepositoryImpl implements GameRepository {
     } catch (e) {
       print('error: ${e.toString()}');
       rethrow;
+    }
+  }
+
+  @override
+  Future<void> markGameAsDone(String matchId) async {
+    try {
+      await dio.patch(
+        '/user/mark-game-as-done',
+        queryParameters: {
+          'code': encryptBlowfish(),
+        },
+        data: {
+          'id': matchId,
+          'available': false,
+        },
+      );
+    } catch (e) {
+      print('error: ${e.toString()}');
     }
   }
 }

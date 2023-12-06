@@ -18,7 +18,7 @@ class AppRouter {
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
           // Return the widget you want to display for this route
-          return HomePage();
+          return const HomePage();
         },
       ),
     );
@@ -28,7 +28,7 @@ class AppRouter {
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
           // Return the widget you want to display for this route
-          return const WebGamePlayScreen();
+          return  WebGamePlayScreen(matchId: params['match_id'][0]);
         },
       ),
     );

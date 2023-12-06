@@ -27,6 +27,7 @@ class WebHomeProvider extends BaseViewModel {
 
   String _uuid = '';
 
+  String get uuid => _uuid;
   StreamSubscription? _sub;
 
   Timer? _timer;
@@ -59,7 +60,7 @@ class WebHomeProvider extends BaseViewModel {
 
   void init() {
     fetchLeaderboard();
-    _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) {
+    _timer ??= Timer.periodic(const Duration(seconds: 10), (timer) {
       fetchLeaderboard();
     });
   }

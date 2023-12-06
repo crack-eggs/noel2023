@@ -5,6 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tiengviet/tiengviet.dart';
 
 import '../../enums.dart';
+import '../../route.dart';
 import '../provider/web_home_provider.dart';
 import '../shared/base_view.dart';
 
@@ -236,10 +237,10 @@ class _HomePageState extends State<HomePage>
     viewModel.init();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       viewModel.loaded();
-    });
-    viewModel.watch(onEvent: () {
-
-      Navigator.popAndPushNamed(context, '/web-game-play');
+      viewModel.watch(onEvent: () {
+        AppRouter.router
+            .navigateTo(context, '/web-game-play?match_id=${viewModel.uuid}');
+      });
     });
   }
 

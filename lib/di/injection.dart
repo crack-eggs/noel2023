@@ -45,7 +45,7 @@ void init() {
         sl(),
         sl(),
       ));
-  sl.registerFactory(() => WebGameProvider(supabase, sl()));
+  sl.registerFactory(() => WebGameProvider(supabase, sl(), sl()));
 
   // usecase
   sl.registerFactory(() => LeaderBoardUsecase(sl()));

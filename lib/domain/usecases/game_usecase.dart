@@ -12,4 +12,8 @@ class GameUsecase {
   Future<bool> checkGameValidation(String id) async {
     return await gameRepository.checkGameValidation(id);
   }
+
+  Future<void> markGameAsDone({required String matchId})async {
+    return await gameRepository.markGameAsDone(matchId);
+  }
 }
