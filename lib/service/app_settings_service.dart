@@ -8,7 +8,7 @@ class AppSettings {
 
   AppSettings(this.gameUsecase);
 
-  void fetch() async {
+  Future<void> fetch() async {
     settings = await gameUsecase.getSettings();
   }
 }

@@ -34,7 +34,8 @@ void init() {
   sl.registerLazySingleton(() => AppSettings(sl()));
   // Repositories
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(supabase));
-  sl.registerLazySingleton<GameRepository>(() => GameRepositoryImpl(supabase));
+  sl.registerLazySingleton<GameRepository>(
+      () => GameRepositoryImpl(supabase, sl()));
 
   // Providers
   sl.registerFactory(() => UserProvider(supabase, sl(), sl(), sl()));

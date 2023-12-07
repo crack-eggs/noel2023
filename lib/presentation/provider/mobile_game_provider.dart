@@ -64,8 +64,10 @@ class MobileGameProvider extends BaseViewModel {
     } else {
       /// update jackpot
 
-      await gameUsecase.updateJackpot();
-      appSettings.fetch();
+      await Future.wait([
+        gameUsecase.updateJackpot(),
+        appSettings.fetch(),
+      ]);
 
       /// get empty
       EventInApp().gameChannel.send(

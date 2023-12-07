@@ -101,7 +101,7 @@ Deno.serve(async (req) => {
 
         const jackpotPath = parsedUrl.pathname.includes("user/update-jackpot");
         if (jackpotPath) {
-          return await updateJackpot(supabaseClient)
+          return await updateJackpot(supabaseClient, body)
         }
 
         const topupPath = parsedUrl.pathname.includes("user/topup");
@@ -147,12 +147,13 @@ Deno.serve(async (req) => {
   }
 })
 
-async function updateJackpot(supabase: SupabaseClient) {
+async function updateJackpot(supabase: SupabaseClient, body) {
   console.log('update jackpot')
+
 
   const { data, error } = await supabase
     .from('settings')
-    .update({ 'jackpot': supabase.sql('jackpot + 1') })
+    .update(body)
     .eq('id', 1);
 
   console.log('update jackpot', data)

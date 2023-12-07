@@ -4,13 +4,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/repositories/game_repository.dart';
 import '../../main.dart';
+import '../../service/app_settings_service.dart';
 import '../../utils/cryto.dart';
 import '../models/user_model.dart';
 
 class GameRepositoryImpl implements GameRepository {
   final SupabaseClient supabaseClient;
 
-  GameRepositoryImpl(this.supabaseClient);
+  final AppSettings appSettings;
+
+  GameRepositoryImpl(this.supabaseClient, this.appSettings);
 
   @override
   Future<List<UserModel>?> getLeaderBoard() async {
@@ -99,17 +102,12 @@ class GameRepositoryImpl implements GameRepository {
 
   @override
   Future<void> updateJackpot() async {
-    print('GameRepositoryImpl.updateJackpot');
     try {
-      await dio.patch(
-        '/user/update-jackpot',
-        queryParameters: {
-          'code': encryptBlowfish(),
-        },
-        data: {
-
-        }
-      );
+      await dio.patch('/user/update-jackpot', queryParameters: {
+        'code': encryptBlowfish(),
+      }, data: {
+        'jackpot': (appSettings.settings?.jackpot ?? 0) + 1,
+      });
     } catch (e) {
       print('error: ${e.toString()}');
     }
