@@ -51,7 +51,10 @@ class MobileGameProvider extends BaseViewModel {
           type: RealtimeListenTypes.broadcast,
           event: EventType.getGift.name,
           payload: {'giftType': GiftType.jackpot.name});
-      await gameUsecase.updateJackpot(quantity: 0);
+      await Future.wait([
+        gameUsecase.updateJackpot(quantity: 0),
+        usecase.updateHammer(quantity: AppSettings().settings?.jackpot ?? 0)
+      ]);
       await Future.wait([
         AppSettings().fetch(),
         gameUsecase.updateGame(

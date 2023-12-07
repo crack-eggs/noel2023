@@ -41,7 +41,6 @@ function decodeBlowfish(encodedData) {
 }
 
 Deno.serve(async (req) => {
-  console.log('--------')
   const { method, url } = req
   try {
     const supabaseClient = createClient(
@@ -58,15 +57,12 @@ Deno.serve(async (req) => {
 
     const codeSha256 = decodeBlowfish(codeParam);
     if (!codeSha256) return handleError('Nghi vấn hack: codeSha256')
-    console.log('codeSha256', codeSha256)
     const parts = codeSha256.split("-");
     if (parts[0] !== 'duymaiotsv') return handleError('Nghi vấn hack: parts')
     const nowClient = parts[1];
     var currentDate = new Date();
     var timeServe = currentDate.getTime() * 1000;
     // compare nowClient and timeServe
-    console.log('timeServe', timeServe)
-    console.log('nowClient', nowClient)
 
     // if ( timeServe - 3000 > parseInt(nowClient) ) return handleError('Nghi vấn hack: timeServe')
     const idCode = parts[2];
@@ -130,7 +126,7 @@ Deno.serve(async (req) => {
 
         const insertGamePath = parsedUrl.pathname.includes("user/insert-game");
         if (insertGamePath) {
-          return insertGame(supabaseClient, email, body);
+          return insertGame(supabaseClient, email!, body);
         }
 
 
@@ -267,11 +263,13 @@ async function updateUser(supabase: SupabaseClient, email: string, body) {
 
 
 async function insertGame(supabase: SupabaseClient, email: string, body) {
+  console.log('insertGame')
   if (!email) return handleError('Nghi vấn hack')
-
+  console.log('email')
   try {
     const { data: data, error } = await supabase.from('games')
       .insert([body])
+    console.log('error', error)
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,

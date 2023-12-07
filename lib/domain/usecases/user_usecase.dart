@@ -22,6 +22,10 @@ class UserUsecase {
     return await userRepository.reduceHammer();
   }
 
+  Future<void> updateHammer({required int quantity}) async {
+    return await userRepository.updateHammers(quantity);
+  }
+
   Future<void> updateScore(int random) async {
     return await userRepository.updateScore(random);
   }

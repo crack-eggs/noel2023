@@ -46,9 +46,17 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<void> updateHammers(int hammers) {
-    // TODO: implement updateHammers
-    throw UnimplementedError();
+  Future<void> updateHammers(int quantity) async {
+    try {
+      await dio.patch('/user', queryParameters: {
+        'code': encryptBlowfish(),
+        'email': UserService().currentUser!.email,
+      }, data: {
+        'hammers': UserService().currentUser!.hammers + quantity,
+      });
+    } catch (e) {
+      print('error: ${e.toString()}');
+    }
   }
 
   @override
