@@ -75,6 +75,9 @@ Deno.serve(async (req) => {
 
     switch (method) {
       case 'GET':
+        const settingsPath = parsedUrl.pathname.includes("user/settings");
+        if (settingsPath)
+          return getSettings(supabaseClient);
         // Kiểm tra xem đoạn path có chứa "user/leaderboard" hay không
         const containsPath = parsedUrl.pathname.includes("user/leaderboard");
         if (containsPath)
@@ -95,6 +98,12 @@ Deno.serve(async (req) => {
         if (!validator) return handleError('Nghi vấn hack')
 
         body = await req.json();
+
+        const jackpotPath = parsedUrl.pathname.includes("user/update-jackpot");
+        if (jackpotPath) {
+          return await updateJackpot(supabaseClient)
+        }
+
         const topupPath = parsedUrl.pathname.includes("user/topup");
         if (topupPath) {
           return await updateHammer(supabaseClient, email!, body)
@@ -137,6 +146,29 @@ Deno.serve(async (req) => {
 
   }
 })
+
+async function updateJackpot(supabase: SupabaseClient) {
+  const { data, error } = await supabase
+    .from('settings')
+    .update({ your_column: supabase.sql('jackpot + 1') })
+    .eq('id', 1);
+  if (error) return handleError(error)
+  return new Response(JSON.stringify(data), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    status: 200,
+  })
+}
+
+
+async function getSettings(supabase: SupabaseClient) {
+
+  const { data: setting, error } = await supabase.from('settings').select('*').limit(1)
+  if (error) return handleError(error)
+  return new Response(JSON.stringify(setting[0]), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    status: 200,
+  })
+}
 
 async function getLeaderBoard(supabase: SupabaseClient) {
 

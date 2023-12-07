@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:noel/domain/usecases/game_usecase.dart';
 import 'package:noel/enums.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:noel/service/app_settings_service.dart';
 import 'package:uuid/uuid.dart';
-import '../../constants.dart';
+import '../../data/models/Settings.dart';
 import '../../data/models/user_model.dart';
 import '../../domain/usecases/leader_board_usecase.dart';
 import '../../service/event_in_app.dart';
@@ -12,10 +12,12 @@ import '../shared/base_view_model.dart';
 
 class WebHomeProvider extends BaseViewModel {
   final LeaderBoardUsecase usecase;
+  final GameUsecase gameUsecase;
 
   List<UserModel>? _leaderboard;
 
-  WebHomeProvider(super.supabase, super.navigatorService, this.usecase);
+  WebHomeProvider(
+      super.supabase, super.navigatorService, this.usecase, this.gameUsecase, this.appSettings);
 
   List<UserModel>? get leaderboard => _leaderboard;
 
@@ -32,9 +34,12 @@ class WebHomeProvider extends BaseViewModel {
 
   Timer? _timer;
 
+  Settings? settings;
+
+  final AppSettings appSettings;
+
   String getUUID() {
     _uuid = const Uuid().v4();
-    print('_uuid: $_uuid');
     return _uuid;
   }
 
@@ -62,7 +67,15 @@ class WebHomeProvider extends BaseViewModel {
     fetchLeaderboard();
     _timer ??= Timer.periodic(const Duration(seconds: 10), (timer) {
       fetchLeaderboard();
+      _getSettings();
     });
+    _getSettings();
+  }
+
+  _getSettings() async {
+    settings = await gameUsecase.getSettings();
+    appSettings.settings = settings;
+    setState(ViewState.idle);
   }
 
   watch({required Function onEvent}) {

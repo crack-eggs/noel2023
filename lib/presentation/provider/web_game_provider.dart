@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:noel/domain/usecases/game_usecase.dart';
 import 'package:noel/service/event_in_app.dart';
 import 'package:noel/utils/toast.dart';
+import '../../constants.dart';
+import '../../service/app_settings_service.dart';
 import '../shared/base_view_model.dart';
 import '../../enums.dart';
 
@@ -18,11 +21,16 @@ class WebGameProvider extends BaseViewModel {
 
   int countdownToClose = 15;
 
+  GiftType? lastGiftType;
+  int score = 0;
+
   Function()? pop;
 
   Timer? _timer;
+  final AppSettings appSettings;
 
-  WebGameProvider(super.supabase, super.navigatorService, this.gameUsecase);
+  WebGameProvider(super.supabase, super.navigatorService, this.gameUsecase,
+      this.appSettings);
 
   setController(AnimationController controller) {
     _controller = controller;
@@ -54,12 +62,12 @@ class WebGameProvider extends BaseViewModel {
       lastEventType = event.eventType;
       print('lastEventType: $lastEventType');
       if (event.eventType == EventType.restartGame) {
-        _controller.repeat();
+        _controller.repeat(reverse: true);
         _timer?.cancel();
       }
 
       if (event.eventType == EventType.startTap) {
-        _controller.repeat();
+        // _controller.repeat(reverse: true);
       }
 
       if (event.eventType == EventType.stopTap) {
@@ -67,9 +75,30 @@ class WebGameProvider extends BaseViewModel {
       }
 
       if (event.eventType == EventType.getGift) {
-        _triggerCountDown();
-        AppToast.show(
-            'Chuc mung ban nhan duoc qua: ${event.payload['payload']['gift']}');
+        // _triggerCountDown();
+
+        final giftType = event.payload['payload']['type'];
+        if (giftType == GiftType.jackpot.name) {
+          lastGiftType = GiftType.jackpot;
+          setState(ViewState.idle);
+
+          appSettings.fetch();
+          AppToast.show('Chuc mung ban nhan duoc jackpot');
+          setState(ViewState.idle);
+        } else if (giftType == GiftType.empty.name) {
+          lastGiftType = GiftType.empty;
+          setState(ViewState.idle);
+
+          appSettings.fetch();
+          AppToast.show(wishLists[Random().nextInt(wishLists.length - 1)]);
+        } else if (giftType == GiftType.gift.name) {
+          lastGiftType = GiftType.gift;
+          score = event.payload['payload']['gift'];
+          setState(ViewState.idle);
+
+          AppToast.show(
+              'Chuc mung ban nhan duoc qua: ${event.payload['payload']['gift']}');
+        }
       }
     });
   }

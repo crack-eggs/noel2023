@@ -15,6 +15,7 @@ import '../presentation/provider/mobile_game_provider.dart';
 import '../presentation/provider/sign_in_google_provider.dart';
 import '../presentation/provider/user_provider.dart';
 import '../presentation/provider/web_game_provider.dart';
+import '../service/app_settings_service.dart';
 import '../service/navigator_service.dart';
 import '../service/realtime_service.dart';
 
@@ -30,6 +31,7 @@ void init() {
   sl.registerLazySingleton(
       () => NavigationService(sl<AppService>().topNavigationKey));
 
+  sl.registerLazySingleton(() => AppSettings(sl()));
   // Repositories
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(supabase));
   sl.registerLazySingleton<GameRepository>(() => GameRepositoryImpl(supabase));
@@ -37,15 +39,16 @@ void init() {
   // Providers
   sl.registerFactory(() => UserProvider(supabase, sl(), sl(), sl()));
   sl.registerFactory(() => GameProvider());
-  sl.registerFactory(() => WebHomeProvider(supabase, sl(), sl()));
+  sl.registerFactory(() => WebHomeProvider(supabase, sl(), sl(), sl(), sl()));
   sl.registerFactory(() => SignInGoogleProvider(supabase, sl(), sl(), sl()));
   sl.registerFactory(() => MobileGameProvider(
         supabase,
         sl(),
         sl(),
         sl(),
+        sl(),
       ));
-  sl.registerFactory(() => WebGameProvider(supabase, sl(), sl()));
+  sl.registerFactory(() => WebGameProvider(supabase, sl(), sl(), sl()));
 
   // usecase
   sl.registerFactory(() => LeaderBoardUsecase(sl()));

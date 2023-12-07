@@ -1,3 +1,4 @@
+import 'package:noel/data/models/Settings.dart';
 import 'package:noel/service/user_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -73,6 +74,37 @@ class GameRepositoryImpl implements GameRepository {
         data: {
           'id': matchId,
           'available': false,
+        },
+      );
+    } catch (e) {
+      print('error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Settings?> getSettings() async {
+    print('GameRepositoryImpl.getSettings');
+    try {
+      final result = await dio.get(
+        '/user/settings',
+        queryParameters: {
+          'code': encryptBlowfish(),
+        },
+      );
+      return Settings.fromJson(result.data);
+    } catch (e) {
+      print('error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> updateJackpot() async {
+    print('GameRepositoryImpl.updateJackpot');
+    try {
+      await dio.patch(
+        '/user/update-jackpot',
+        queryParameters: {
+          'code': encryptBlowfish(),
         },
       );
     } catch (e) {

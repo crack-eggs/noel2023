@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tiengviet/tiengviet.dart';
 
+import '../../constants.dart';
 import '../../enums.dart';
 import '../../route.dart';
 import '../provider/web_home_provider.dart';
@@ -17,7 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with VMState<WebHomeProvider, HomePage> {
+    with VMState<WebHomeProvider, HomePage>, SingleTickerProviderStateMixin {
+  late AnimationController _lightController;
+
   @override
   Widget createWidget(BuildContext context, WebHomeProvider viewModel) {
     return WillPopScope(
@@ -88,6 +91,10 @@ class _HomePageState extends State<HomePage>
                                 : 20),
                     child: GestureDetector(
                       onTap: () async {
+                        // ///todo test
+                        //
+                        // AppRouter.router
+                        //     .navigateTo(context, '/web-game-play?match_id=${viewModel.uuid}');
                         viewModel
                             .changeSizeButton(WebHomeProvider.btnSmallSize);
                         await Future.delayed(const Duration(milliseconds: 100));
@@ -116,6 +123,60 @@ class _HomePageState extends State<HomePage>
                     width: 100,
                   ),
                 ),
+                Positioned(
+                  right: MediaQuery.of(context).size.width / 25,
+                  top: 40,
+                  child: GestureDetector(
+                    onTap: () {
+                      showTutorial();
+                    },
+                    child: SvgPicture.asset(
+                      'assets/home/tutorial.svg',
+                      fit: BoxFit.fitWidth,
+                      width: 40,
+                    ),
+                  ),
+                ),
+                if (viewModel.settings != null)
+                  Positioned(
+                    left: 0,
+                    bottom: 0,
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        RotationTransition(
+                          turns: Tween(begin: 0.0, end: 1.0)
+                              .animate(_lightController),
+                          child: Image.asset(
+                            'assets/home/light.png',
+                            height: 300,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                        Image.asset(
+                          'assets/home/coffer.png',
+                          height: 150,
+                          fit: BoxFit.fitHeight,
+                        ),
+                        Text('+${viewModel.settings!.jackpot}',
+                            style: GoogleFonts.lilitaOne(
+                              fontSize: 40,
+                              letterSpacing: 5,
+                              foreground: Paint()
+                                ..style = PaintingStyle.stroke
+                                ..strokeWidth = 10
+                                ..color = primaryColor,
+                            )),
+                        Text('+${viewModel.settings!.jackpot}',
+                          style: GoogleFonts.lilitaOne(
+                            fontSize: 40,
+                            letterSpacing: 5,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
               ],
             ),
           ),
@@ -235,13 +296,39 @@ class _HomePageState extends State<HomePage>
   @override
   void onVMReady(WebHomeProvider viewModel, BuildContext context) {
     viewModel.init();
+    _lightController = AnimationController(
+      duration: const Duration(seconds: 10),
+      vsync: this,
+    );
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       viewModel.loaded();
       viewModel.watch(onEvent: () {
         AppRouter.router
             .navigateTo(context, '/web-game-play?match_id=${viewModel.uuid}');
       });
+      _lightController.repeat();
     });
+  }
+
+  void showTutorial() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Image.asset(
+                'assets/home/tutorial_popup.png',
+                height: 700,
+                fit: BoxFit.fitHeight,
+              )),
+        );
+      },
+    );
   }
 
   void showQrCode() {
@@ -298,6 +385,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
+    _lightController.dispose();
     viewModel.dispose();
     super.dispose();
   }

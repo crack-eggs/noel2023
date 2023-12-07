@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:noel/constants.dart';
+import 'package:noel/service/app_settings_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../data/models/game_model.dart';
@@ -17,9 +18,10 @@ class MobileGameProvider extends BaseViewModel {
   final NavigationService na;
   final UserUsecase usecase;
   final GameUsecase gameUsecase;
+  final AppSettings appSettings;
 
-  MobileGameProvider(
-      this.supabaseClient, this.na, this.usecase, this.gameUsecase)
+  MobileGameProvider(this.supabaseClient, this.na, this.usecase,
+      this.gameUsecase, this.appSettings)
       : super(supabaseClient, na);
 
   int countTap = 0;
@@ -39,13 +41,37 @@ class MobileGameProvider extends BaseViewModel {
   }
 
   void onUserGetGift() async {
-    print('MobileGameProvider.onUserGetGift');
     setState(ViewState.busy);
-    final random = Random().nextInt(100);
-    EventInApp().gameChannel.send(
-        type: RealtimeListenTypes.broadcast,
-        event: EventType.getGift.name,
-        payload: {'type': 1, 'gift': random});
+    final random = Random().nextInt(100) + 1;
+    final jackpotPercent =
+        ((appSettings.settings?.jackpot ?? 0) / 2).round() + 1;
+    final giftPercent = (100 - jackpotPercent) / 2 + jackpotPercent;
+    if (random < jackpotPercent) {
+      /// get jackpot
+      EventInApp().gameChannel.send(
+          type: RealtimeListenTypes.broadcast,
+          event: EventType.getGift.name,
+          payload: {'type': GiftType.jackpot.name});
+    } else if (random < giftPercent) {
+      /// get gift
+      final randomScore = Random().nextInt(50) + 50;
+
+      EventInApp().gameChannel.send(
+          type: RealtimeListenTypes.broadcast,
+          event: EventType.getGift.name,
+          payload: {'type': GiftType.gift.name, 'gift': randomScore});
+    } else {
+      /// update jackpot
+
+      await gameUsecase.updateJackpot();
+      appSettings.fetch();
+
+      /// get empty
+      EventInApp().gameChannel.send(
+          type: RealtimeListenTypes.broadcast,
+          event: EventType.getGift.name,
+          payload: {'type': GiftType.empty.name});
+    }
 
     await usecase.updateScore(random);
     await usecase.fetch();

@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../constants.dart';
 import '../../enums.dart';
 import '../provider/web_game_provider.dart';
 import '../shared/base_view.dart';
@@ -13,35 +17,155 @@ class WebGamePlayScreen extends StatefulWidget {
 }
 
 class _WebGamePlayScreenState extends State<WebGamePlayScreen>
-    with
-        SingleTickerProviderStateMixin,
-        VMState<WebGameProvider, WebGamePlayScreen> {
+    with TickerProviderStateMixin, VMState<WebGameProvider, WebGamePlayScreen> {
   late AnimationController _controller;
+  late AnimationController _lightController;
 
   @override
   Widget createWidget(BuildContext context, WebGameProvider viewModel) {
+    // return WillPopScope(
+    //   onWillPop: () async => false,
+    //   child: consumer(
+    //     builder: (BuildContext context, WebGameProvider viewModel, _) =>
+    //         Scaffold(
+    //             body: Column(
+    //               children: [
+    //                 RotationTransition(
+    //                   turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
+    //                   child: const Icon(Icons.egg_outlined, size: 300),
+    //                 ),
+    //                 ElevatedButton(
+    //                     onPressed: () {
+    //                       viewModel.onUserBackToHome();
+    //                       Navigator.pop(context);
+    //                     },
+    //                     child: const Text('Back')),
+    //                 viewModel.lastEventType == EventType.getGift
+    //                     ? Text('Countdown to close: ${viewModel.countdownToClose}')
+    //                     : const SizedBox()
+    //               ],
+    //             )),
+    //   ),
+    // );
+
     return WillPopScope(
       onWillPop: () async => false,
-      child: consumer(
-        builder: (BuildContext context, WebGameProvider viewModel, _) =>
-            Scaffold(
-                body: Column(
-                  children: [
-                    RotationTransition(
-                      turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
-                      child: const Icon(Icons.egg_outlined, size: 300),
+      child: Scaffold(
+        body: consumer(
+          builder: (BuildContext context, WebGameProvider viewModel, _) =>
+              Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/home/background_home.png'),
+                fit: BoxFit.fill,
+              ),
+            ),
+            child: Stack(
+              children: [
+                Container(
+                  color: Colors.black45,
+                ),
+                if (viewModel.lastEventType == EventType.start ||
+                    viewModel.lastEventType == EventType.restartGame)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 50),
+                      child: RotationTransition(
+                        turns:
+                            Tween(begin: -0.02, end: 0.02).animate(_controller),
+                        alignment: Alignment.bottomCenter,
+                        child: Image.asset(
+                          'assets/home/egg_center.png',
+                          height: 500,
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          viewModel.onUserBackToHome();
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Back')),
-                    viewModel.lastEventType == EventType.getGift
-                        ? Text('Countdown to close: ${viewModel.countdownToClose}')
-                        : const SizedBox()
-                  ],
-                )),
+                  ),
+                if (viewModel.lastEventType == EventType.getGift)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                        padding: const EdgeInsets.only(bottom: 50),
+                        child: Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            RotationTransition(
+                              turns: Tween(begin: 0.0, end: 1.0)
+                                  .animate(_lightController),
+                              child: Image.asset(
+                                'assets/home/light.png',
+                                height: 300,
+                                fit: BoxFit.fitHeight,
+                              ),
+                            ),
+                            if (viewModel.lastGiftType == GiftType.jackpot)
+                              Image.asset(
+                                'assets/home/coffer.png',
+                                height: 150,
+                                fit: BoxFit.fitHeight,
+                              ),
+                            if (viewModel.lastGiftType == GiftType.empty)
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/home/qr_popup.png',
+                                    height: 300,
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                  Text(
+                                    wishLists[
+                                        Random().nextInt(wishLists.length - 1)],
+                                    style: GoogleFonts.lilitaOne(fontSize: 30),
+                                  )
+                                ],
+                              ),
+                            if (viewModel.lastGiftType == GiftType.gift)
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/home/caythong.png',
+                                    height: 150,
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                  Text('+${viewModel.score}',
+                                      style: GoogleFonts.lilitaOne(
+                                        fontSize: 40,
+                                        letterSpacing: 5,
+                                        foreground: Paint()
+                                          ..style = PaintingStyle.stroke
+                                          ..strokeWidth = 10
+                                          ..color = primaryColor,
+                                      )),
+                                  Text(
+                                    '+${viewModel.score}',
+                                    style: GoogleFonts.lilitaOne(
+                                      fontSize: 40,
+                                      letterSpacing: 5,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              )
+                          ],
+                        )),
+                  ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width / 20,
+                  top: 40,
+                  child: Image.asset(
+                    'assets/home/logo_home.png',
+                    fit: BoxFit.fitHeight,
+                    height: 100,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -51,9 +175,14 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
     viewModel.pop = () {
       Navigator.pop(context);
     };
+    _lightController = AnimationController(
+      duration: const Duration(seconds: 10),
+      vsync: this,
+    );
+    _lightController.repeat();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 300),
     );
     viewModel.setController(_controller);
     viewModel.init(widget.matchId);

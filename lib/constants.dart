@@ -21,3 +21,16 @@ final GoogleSignInPlugin googleSignIn =
 const Color primaryColor = Color(0xFFBD0F72);
 
 String colorToastError = 'linear-gradient(to right, #BD0F72, #BD0F72)';
+
+final wishLists = [
+  "Merry Christmas and joyful cheer!",
+  "Wishing you festive joy!",
+  "Peace, love, and Christmas delight!",
+  "Season's greetings and happiness!",
+  "Celebrate with joy and warmth!",
+  "Merry Christmas to all!",
+  "Cheers to holiday happiness!",
+  "Warmest wishes for Christmas!",
+  "Jingle all the way!",
+  "Sending festive joy your way!"
+];
