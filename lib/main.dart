@@ -41,14 +41,14 @@ void main() async {
     ],
   ));
 
-
   prefs = await SharedPreferences.getInstance();
   init();
   EventInApp();
   sl<RealtimeService>();
   AppRouter.setupRouter();
-  sl<AppSettings>();
+
   UserService();
+  AppSettings().fetch();
   runApp(MyApp());
 }
 

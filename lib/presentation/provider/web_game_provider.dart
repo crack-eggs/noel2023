@@ -27,10 +27,8 @@ class WebGameProvider extends BaseViewModel {
   Function()? pop;
 
   Timer? _timer;
-  final AppSettings appSettings;
 
-  WebGameProvider(super.supabase, super.navigatorService, this.gameUsecase,
-      this.appSettings);
+  WebGameProvider(super.supabase, super.navigatorService, this.gameUsecase);
 
   setController(AnimationController controller) {
     _controller = controller;
@@ -88,18 +86,17 @@ class WebGameProvider extends BaseViewModel {
           lastGiftType = GiftType.jackpot;
           setState(ViewState.idle);
 
-          appSettings.fetch();
+          AppSettings().fetch();
           setState(ViewState.idle);
         } else if (giftType == GiftType.empty.name) {
           lastGiftType = GiftType.empty;
           setState(ViewState.idle);
 
-          appSettings.fetch();
+          AppSettings().fetch();
         } else if (giftType == GiftType.gift.name) {
           lastGiftType = GiftType.gift;
           score = event.payload['payload']['gift'];
           setState(ViewState.idle);
-
         }
       }
       setState(ViewState.idle);

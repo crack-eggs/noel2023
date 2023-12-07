@@ -17,7 +17,7 @@ class WebHomeProvider extends BaseViewModel {
   List<UserModel>? _leaderboard;
 
   WebHomeProvider(
-      super.supabase, super.navigatorService, this.usecase, this.gameUsecase, this.appSettings);
+      super.supabase, super.navigatorService, this.usecase, this.gameUsecase);
 
   List<UserModel>? get leaderboard => _leaderboard;
 
@@ -35,8 +35,6 @@ class WebHomeProvider extends BaseViewModel {
   Timer? _timer;
 
   Settings? settings;
-
-  final AppSettings appSettings;
 
   String getUUID() {
     _uuid = const Uuid().v4();
@@ -74,7 +72,7 @@ class WebHomeProvider extends BaseViewModel {
 
   _getSettings() async {
     settings = await gameUsecase.getSettings();
-    appSettings.settings = settings;
+    AppSettings().settings = settings;
     setState(ViewState.idle);
   }
 

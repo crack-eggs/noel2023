@@ -11,9 +11,7 @@ import '../models/user_model.dart';
 class GameRepositoryImpl implements GameRepository {
   final SupabaseClient supabaseClient;
 
-  final AppSettings appSettings;
-
-  GameRepositoryImpl(this.supabaseClient, this.appSettings);
+  GameRepositoryImpl(this.supabaseClient);
 
   @override
   Future<List<UserModel>?> getLeaderBoard() async {
@@ -106,7 +104,7 @@ class GameRepositoryImpl implements GameRepository {
       await dio.patch('/user/update-jackpot', queryParameters: {
         'code': encryptBlowfish(),
       }, data: {
-        'jackpot': (appSettings.settings?.jackpot ?? 0) + 1,
+        'jackpot': (AppSettings().settings?.jackpot ?? 0) + 1,
       });
     } catch (e) {
       print('error: ${e.toString()}');

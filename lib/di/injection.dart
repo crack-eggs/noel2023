@@ -31,25 +31,27 @@ void init() {
   sl.registerLazySingleton(
       () => NavigationService(sl<AppService>().topNavigationKey));
 
-  sl.registerLazySingleton(() => AppSettings(sl()));
+  // sl.registerLazySingleton(() => AppSettings(sl()));
   // Repositories
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(supabase));
-  sl.registerLazySingleton<GameRepository>(
-      () => GameRepositoryImpl(supabase, sl()));
+  sl.registerLazySingleton<GameRepository>(() => GameRepositoryImpl(supabase));
 
   // Providers
   sl.registerFactory(() => UserProvider(supabase, sl(), sl(), sl()));
   sl.registerFactory(() => GameProvider());
-  sl.registerFactory(() => WebHomeProvider(supabase, sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => WebHomeProvider(supabase, sl(), sl(), sl()));
   sl.registerFactory(() => SignInGoogleProvider(supabase, sl(), sl(), sl()));
   sl.registerFactory(() => MobileGameProvider(
         supabase,
         sl(),
         sl(),
         sl(),
+      ));
+  sl.registerFactory(() => WebGameProvider(
+        supabase,
+        sl(),
         sl(),
       ));
-  sl.registerFactory(() => WebGameProvider(supabase, sl(), sl(), sl()));
 
   // usecase
   sl.registerFactory(() => LeaderBoardUsecase(sl()));

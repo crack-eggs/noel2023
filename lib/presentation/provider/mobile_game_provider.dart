@@ -18,10 +18,9 @@ class MobileGameProvider extends BaseViewModel {
   final NavigationService na;
   final UserUsecase usecase;
   final GameUsecase gameUsecase;
-  final AppSettings appSettings;
 
   MobileGameProvider(this.supabaseClient, this.na, this.usecase,
-      this.gameUsecase, this.appSettings)
+      this.gameUsecase)
       : super(supabaseClient, na);
 
   int countTap = 0;
@@ -44,7 +43,7 @@ class MobileGameProvider extends BaseViewModel {
     setState(ViewState.busy);
     final random = Random().nextInt(100) + 1;
     final jackpotPercent =
-        ((appSettings.settings?.jackpot ?? 0) / 2).round() + 1;
+        ((AppSettings().settings?.jackpot ?? 0) / 2).round() + 1;
     final giftPercent = (100 - jackpotPercent) / 2 + jackpotPercent;
     if (random < jackpotPercent) {
       /// get jackpot
@@ -68,7 +67,7 @@ class MobileGameProvider extends BaseViewModel {
           event: EventType.getGift.name,
           payload: {'giftType': GiftType.empty.name});
       await gameUsecase.updateJackpot();
-      await appSettings.fetch();
+      await AppSettings().fetch();
     }
 
     await usecase.fetch();
