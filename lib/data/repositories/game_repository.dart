@@ -106,6 +106,9 @@ class GameRepositoryImpl implements GameRepository {
         queryParameters: {
           'code': encryptBlowfish(),
         },
+        data: {
+
+        }
       );
     } catch (e) {
       print('error: ${e.toString()}');

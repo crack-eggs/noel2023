@@ -59,7 +59,7 @@ class UserRepositoryImpl implements UserRepository {
         'code': encryptBlowfish(),
         'email': UserService().currentUser!.email,
       }, data: {
-        'score': score,
+        'score': UserService().currentUser!.score + score,
         'hammers': UserService().currentUser!.hammers,
       });
     } catch (e) {

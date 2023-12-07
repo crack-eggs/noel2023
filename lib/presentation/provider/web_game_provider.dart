@@ -60,6 +60,7 @@ class WebGameProvider extends BaseViewModel {
   void _watch() {
     _sub ??= EventInApp().controller.stream.listen((event) {
       if (event.eventType == EventType.stopTap) {
+        setState(ViewState.idle);
         return;
       }
       lastEventType = event.eventType;
@@ -88,23 +89,20 @@ class WebGameProvider extends BaseViewModel {
           setState(ViewState.idle);
 
           appSettings.fetch();
-          AppToast.show('Chuc mung ban nhan duoc jackpot');
           setState(ViewState.idle);
         } else if (giftType == GiftType.empty.name) {
           lastGiftType = GiftType.empty;
           setState(ViewState.idle);
 
           appSettings.fetch();
-          AppToast.show(wishLists[Random().nextInt(wishLists.length - 1)]);
         } else if (giftType == GiftType.gift.name) {
           lastGiftType = GiftType.gift;
           score = event.payload['payload']['gift'];
           setState(ViewState.idle);
 
-          AppToast.show(
-              'Chuc mung ban nhan duoc qua: ${event.payload['payload']['payload']['gift']}');
         }
       }
+      setState(ViewState.idle);
     });
   }
 

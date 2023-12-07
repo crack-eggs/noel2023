@@ -55,6 +55,7 @@ class MobileGameProvider extends BaseViewModel {
     } else if (random < giftPercent) {
       /// get gift
       final randomScore = Random().nextInt(50) + 50;
+      await usecase.updateScore(randomScore);
 
       EventInApp().gameChannel.send(
           type: RealtimeListenTypes.broadcast,
@@ -73,7 +74,6 @@ class MobileGameProvider extends BaseViewModel {
           payload: {'giftType': GiftType.empty.name});
     }
 
-    await usecase.updateScore(random);
     await usecase.fetch();
     setState(ViewState.idle);
   }

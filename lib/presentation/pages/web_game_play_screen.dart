@@ -67,6 +67,7 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
                   color: Colors.black45,
                 ),
                 if (viewModel.lastEventType == EventType.start ||
+                    viewModel.lastEventType == EventType.startTap ||
                     viewModel.lastEventType == EventType.restartGame)
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -86,54 +87,59 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
                   ),
                 if (viewModel.lastEventType == EventType.getGift)
                   Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 50),
-                        child: Stack(
-                          alignment: AlignmentDirectional.center,
-                          children: [
-                            RotationTransition(
-                              turns: Tween(begin: 0.0, end: 1.0)
-                                  .animate(_lightController),
-                              child: Image.asset(
-                                'assets/home/light.png',
-                                height: 300,
-                                fit: BoxFit.fitHeight,
-                              ),
-                            ),
-                            if (viewModel.lastGiftType == GiftType.jackpot)
+                    alignment: Alignment.center,
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        RotationTransition(
+                          turns: Tween(begin: 0.0, end: 1.0)
+                              .animate(_lightController),
+                          child: Image.asset(
+                            'assets/home/light.png',
+                            height: 300,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                        if (viewModel.lastGiftType == GiftType.jackpot)
+                          Image.asset(
+                            'assets/home/coffer.png',
+                            height: 250,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        if (viewModel.lastGiftType == GiftType.empty)
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
                               Image.asset(
-                                'assets/home/coffer.png',
-                                height: 150,
+                                'assets/home/qr_popup.png',
+                                height: 600,
                                 fit: BoxFit.fitHeight,
                               ),
-                            if (viewModel.lastGiftType == GiftType.empty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: Text(
+                                  wishLists[
+                                      Random().nextInt(wishLists.length - 1)],
+                                  style: GoogleFonts.lilitaOne(fontSize: 35),
+                                ),
+                              )
+                            ],
+                          ),
+                        if (viewModel.lastGiftType == GiftType.gift)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/home/thong4x.png',
+                                height: 250,
+                                fit: BoxFit.fitHeight,
+                              ),
                               Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  Image.asset(
-                                    'assets/home/qr_popup.png',
-                                    height: 300,
-                                    fit: BoxFit.fitHeight,
-                                  ),
-                                  Text(
-                                    wishLists[
-                                        Random().nextInt(wishLists.length - 1)],
-                                    style: GoogleFonts.lilitaOne(fontSize: 30),
-                                  )
-                                ],
-                              ),
-                            if (viewModel.lastGiftType == GiftType.gift)
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/home/caythong.png',
-                                    height: 150,
-                                    fit: BoxFit.fitHeight,
-                                  ),
                                   Text('+${viewModel.score}',
                                       style: GoogleFonts.lilitaOne(
-                                        fontSize: 40,
+                                        fontSize: 70,
                                         letterSpacing: 5,
                                         foreground: Paint()
                                           ..style = PaintingStyle.stroke
@@ -143,15 +149,17 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
                                   Text(
                                     '+${viewModel.score}',
                                     style: GoogleFonts.lilitaOne(
-                                      fontSize: 40,
+                                      fontSize: 70,
                                       letterSpacing: 5,
                                       color: Colors.white,
                                     ),
                                   ),
                                 ],
                               )
-                          ],
-                        )),
+                            ],
+                          )
+                      ],
+                    ),
                   ),
                 Positioned(
                   left: MediaQuery.of(context).size.width / 20,
