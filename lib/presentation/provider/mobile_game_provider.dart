@@ -62,18 +62,13 @@ class MobileGameProvider extends BaseViewModel {
           event: EventType.getGift.name,
           payload: {'giftType': GiftType.gift.name, 'gift': randomScore});
     } else {
-      /// update jackpot
-
-      await Future.wait([
-        gameUsecase.updateJackpot(),
-        appSettings.fetch(),
-      ]);
-
       /// get empty
       EventInApp().gameChannel.send(
           type: RealtimeListenTypes.broadcast,
           event: EventType.getGift.name,
           payload: {'giftType': GiftType.empty.name});
+      await gameUsecase.updateJackpot();
+      await appSettings.fetch();
     }
 
     await usecase.fetch();
