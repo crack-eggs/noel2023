@@ -51,7 +51,7 @@ class MobileGameProvider extends BaseViewModel {
       EventInApp().gameChannel.send(
           type: RealtimeListenTypes.broadcast,
           event: EventType.getGift.name,
-          payload: {'type': GiftType.jackpot.name});
+          payload: {'giftType': GiftType.jackpot.name});
     } else if (random < giftPercent) {
       /// get gift
       final randomScore = Random().nextInt(50) + 50;
@@ -59,7 +59,7 @@ class MobileGameProvider extends BaseViewModel {
       EventInApp().gameChannel.send(
           type: RealtimeListenTypes.broadcast,
           event: EventType.getGift.name,
-          payload: {'type': GiftType.gift.name, 'gift': randomScore});
+          payload: {'giftType': GiftType.gift.name, 'gift': randomScore});
     } else {
       /// update jackpot
 
@@ -70,7 +70,7 @@ class MobileGameProvider extends BaseViewModel {
       EventInApp().gameChannel.send(
           type: RealtimeListenTypes.broadcast,
           event: EventType.getGift.name,
-          payload: {'type': GiftType.empty.name});
+          payload: {'giftType': GiftType.empty.name});
     }
 
     await usecase.updateScore(random);

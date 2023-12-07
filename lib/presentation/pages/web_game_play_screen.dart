@@ -162,6 +162,15 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
                     height: 100,
                   ),
                 ),
+                ElevatedButton(
+                    onPressed: () {
+                      viewModel.onUserBackToHome();
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Back')),
+                viewModel.lastEventType == EventType.getGift
+                    ? Text('Countdown to close: ${viewModel.countdownToClose}')
+                    : const SizedBox()
               ],
             ),
           ),

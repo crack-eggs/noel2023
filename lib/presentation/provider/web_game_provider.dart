@@ -59,6 +59,9 @@ class WebGameProvider extends BaseViewModel {
 
   void _watch() {
     _sub ??= EventInApp().controller.stream.listen((event) {
+      if (event.eventType == EventType.stopTap) {
+        return;
+      }
       lastEventType = event.eventType;
       print('lastEventType: $lastEventType');
       if (event.eventType == EventType.restartGame) {
@@ -67,7 +70,7 @@ class WebGameProvider extends BaseViewModel {
       }
 
       if (event.eventType == EventType.startTap) {
-        // _controller.repeat(reverse: true);
+        _controller.repeat(reverse: true);
       }
 
       if (event.eventType == EventType.stopTap) {
@@ -75,9 +78,11 @@ class WebGameProvider extends BaseViewModel {
       }
 
       if (event.eventType == EventType.getGift) {
+        _controller.stop();
+
         // _triggerCountDown();
 
-        final giftType = event.payload['payload']['type'];
+        final giftType = event.payload['payload']['giftType'];
         if (giftType == GiftType.jackpot.name) {
           lastGiftType = GiftType.jackpot;
           setState(ViewState.idle);
@@ -97,7 +102,7 @@ class WebGameProvider extends BaseViewModel {
           setState(ViewState.idle);
 
           AppToast.show(
-              'Chuc mung ban nhan duoc qua: ${event.payload['payload']['gift']}');
+              'Chuc mung ban nhan duoc qua: ${event.payload['payload']['payload']['gift']}');
         }
       }
     });
