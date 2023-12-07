@@ -22,7 +22,12 @@ class GameUsecase {
     return await gameRepository.getSettings();
   }
 
-  Future<void> updateJackpot() async {
-    return await gameRepository.updateJackpot();
+  Future<void> updateJackpot({int? quantity}) async {
+    return await gameRepository.updateJackpot(quantity: quantity);
+  }
+
+  Future<void> updateGame(
+      {required String matchId, required Map<String, dynamic> payload}) async {
+    return await gameRepository.updateGame(matchId: matchId, payload: payload);
   }
 }

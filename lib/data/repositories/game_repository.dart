@@ -99,12 +99,30 @@ class GameRepositoryImpl implements GameRepository {
   }
 
   @override
-  Future<void> updateJackpot() async {
+  Future<void> updateJackpot({int? quantity}) async {
     try {
       await dio.patch('/user/update-jackpot', queryParameters: {
         'code': encryptBlowfish(),
       }, data: {
-        'jackpot': (AppSettings().settings?.jackpot ?? 0) + 1,
+        'jackpot': quantity ?? ((AppSettings().settings?.jackpot ?? 0) + 1),
+      });
+    } catch (e) {
+      print('error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> updateGame(
+      {required String matchId, required Map<String, dynamic> payload}) async {
+    try {
+        await dio.post('/user/insert-game', queryParameters: {
+        'code': encryptBlowfish(),
+        'email': UserService().currentUser!.email,
+      }, data: {
+        'match_id': matchId,
+        'payload': payload,
+        'email': UserService().currentUser!.email,
+        'hammers_remain': UserService().currentUser!.hammers,
       });
     } catch (e) {
       print('error: ${e.toString()}');

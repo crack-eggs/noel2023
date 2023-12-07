@@ -19,8 +19,8 @@ class MobileGameProvider extends BaseViewModel {
   final UserUsecase usecase;
   final GameUsecase gameUsecase;
 
-  MobileGameProvider(this.supabaseClient, this.na, this.usecase,
-      this.gameUsecase)
+  MobileGameProvider(
+      this.supabaseClient, this.na, this.usecase, this.gameUsecase)
       : super(supabaseClient, na);
 
   int countTap = 0;
@@ -51,15 +51,27 @@ class MobileGameProvider extends BaseViewModel {
           type: RealtimeListenTypes.broadcast,
           event: EventType.getGift.name,
           payload: {'giftType': GiftType.jackpot.name});
+      await gameUsecase.updateJackpot(quantity: 0);
+      await Future.wait([
+        AppSettings().fetch(),
+        gameUsecase.updateGame(
+            matchId: matchId, payload: {'giftType': GiftType.jackpot.name})
+      ]); // wait for update jackpot
     } else if (random < giftPercent) {
       /// get gift
       final randomScore = Random().nextInt(50) + 50;
-      await usecase.updateScore(randomScore);
 
       EventInApp().gameChannel.send(
           type: RealtimeListenTypes.broadcast,
           event: EventType.getGift.name,
           payload: {'giftType': GiftType.gift.name, 'gift': randomScore});
+
+      await Future.wait([
+        usecase.updateScore(randomScore),
+        gameUsecase.updateGame(
+            matchId: matchId,
+            payload: {'giftType': GiftType.gift.name, 'gift': randomScore})
+      ]);
     } else {
       /// get empty
       EventInApp().gameChannel.send(
@@ -67,7 +79,11 @@ class MobileGameProvider extends BaseViewModel {
           event: EventType.getGift.name,
           payload: {'giftType': GiftType.empty.name});
       await gameUsecase.updateJackpot();
-      await AppSettings().fetch();
+      await Future.wait([
+        AppSettings().fetch(),
+        gameUsecase.updateGame(
+            matchId: matchId, payload: {'giftType': GiftType.empty.name})
+      ]); //
     }
 
     await usecase.fetch();

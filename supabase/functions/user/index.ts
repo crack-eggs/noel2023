@@ -128,6 +128,12 @@ Deno.serve(async (req) => {
         body = await req.json();
 
 
+        const insertGamePath = parsedUrl.pathname.includes("user/insert-game");
+        if (insertGamePath) {
+          return insertGame(supabaseClient, email, body);
+        }
+
+
         const createMathPath = parsedUrl.pathname.includes("user/create-match");
         if (createMathPath) {
           return createGame(supabaseClient, body);
@@ -260,6 +266,25 @@ async function updateUser(supabase: SupabaseClient, email: string, body) {
 }
 
 
+async function insertGame(supabase: SupabaseClient, email: string, body) {
+  if (!email) return handleError('Nghi vấn hack')
+
+  try {
+    const { data: data, error } = await supabase.from('games')
+      .insert([body])
+    return new Response(JSON.stringify(data), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    })
+  }
+  catch (e) {
+    console.log('e', e)
+    return handleError(e)
+
+  }
+}
+
+
 async function markDone(supabase: SupabaseClient, email: string, body) {
   try {
     const { data: data, error } = await supabase.from('match_status')
@@ -288,15 +313,6 @@ async function updateScore(supabase: SupabaseClient, email: string, body) {
         'score': body.score
       })
       .eq('email', email)
-
-    const { data: _, __ } = await supabase.from('games')
-      .insert([
-        {
-          'score': body.score,
-          'hammers_remain': body.hammers,
-          'email': email
-        }
-      ])
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,

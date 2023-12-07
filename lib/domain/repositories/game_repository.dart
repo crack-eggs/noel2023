@@ -12,5 +12,8 @@ abstract class GameRepository {
 
   Future<Settings?> getSettings();
 
-  Future<void> updateJackpot();
+  Future<void> updateJackpot({int? quantity});
+
+  Future<void> updateGame(
+      {required String matchId, required Map<String, dynamic> payload});
 }
