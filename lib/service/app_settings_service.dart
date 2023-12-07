@@ -1,4 +1,4 @@
-import '../data/models/Settings.dart';
+import '../data/models/settings.dart';
 import '../domain/usecases/game_usecase.dart';
 
 class AppSettings {

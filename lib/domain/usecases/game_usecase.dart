@@ -1,4 +1,4 @@
-import '../../data/models/Settings.dart';
+import '../../data/models/settings.dart';
 import '../repositories/game_repository.dart';
 
 class GameUsecase {

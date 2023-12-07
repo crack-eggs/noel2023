@@ -1,4 +1,4 @@
-import '../../data/models/Settings.dart';
+import '../../data/models/settings.dart';
 import '../../data/models/user_model.dart';
 
 abstract class GameRepository {

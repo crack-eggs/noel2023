@@ -4,7 +4,7 @@ import 'package:noel/domain/usecases/game_usecase.dart';
 import 'package:noel/enums.dart';
 import 'package:noel/service/app_settings_service.dart';
 import 'package:uuid/uuid.dart';
-import '../../data/models/Settings.dart';
+import '../../data/models/settings.dart';
 import '../../data/models/user_model.dart';
 import '../../domain/usecases/leader_board_usecase.dart';
 import '../../service/event_in_app.dart';

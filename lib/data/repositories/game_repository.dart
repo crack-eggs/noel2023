@@ -1,4 +1,4 @@
-import 'package:noel/data/models/Settings.dart';
+import 'package:noel/data/models/settings.dart';
 import 'package:noel/service/user_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
