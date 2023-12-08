@@ -18,7 +18,6 @@ class ButtonConfiguratorDemo extends StatefulWidget {
 
 class _ButtonConfiguratorState extends State<ButtonConfiguratorDemo> {
   GoogleSignInUserData? _userData; // sign-in information?
-  GSIButtonConfiguration? _buttonConfiguration; // button configuration
 
   @override
   void initState() {
@@ -39,11 +38,6 @@ class _ButtonConfiguratorState extends State<ButtonConfiguratorDemo> {
     });
   }
 
-  void _handleNewWebButtonConfiguration(GSIButtonConfiguration newConfig) {
-    setState(() {
-      _buttonConfiguration = newConfig;
-    });
-  }
 
   Widget _buildBody() {
     return Row(
@@ -53,7 +47,7 @@ class _ButtonConfiguratorState extends State<ButtonConfiguratorDemo> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               if (_userData == null)
-                googleSignIn.renderButton(configuration: _buttonConfiguration),
+                googleSignIn.renderButton(configuration: GSIButtonConfiguration()),
               if (_userData != null) ...<Widget>[
                 Text('Hello, ${_userData!.displayName}!'),
                 ElevatedButton(
@@ -64,23 +58,12 @@ class _ButtonConfiguratorState extends State<ButtonConfiguratorDemo> {
             ],
           ),
         ),
-        renderWebButtonConfiguration(
-          _buttonConfiguration,
-          onChange: _userData == null ? _handleNewWebButtonConfiguration : null,
-        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Sign in with Google button Tester'),
-        ),
-        body: ConstrainedBox(
-          constraints: const BoxConstraints.expand(),
-          child: _buildBody(),
-        ));
+    return _buildBody();
   }
 }

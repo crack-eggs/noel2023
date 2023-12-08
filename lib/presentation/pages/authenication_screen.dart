@@ -36,21 +36,35 @@ class _SignInGoogleScreenState extends State<SignInGoogleScreen>
 
   @override
   Widget createWidget(BuildContext context, SignInGoogleProvider viewModel) {
-    return consumer(
-      builder: (BuildContext context, SignInGoogleProvider viewModel, _) =>
-          viewModel.state == ViewState.busy
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Center(
-                  child: UserService().currentUser == null
-                      ? ButtonConfiguratorDemo(
-                          onUserSignInSuccess:
-                              (GoogleSignInUserData? userData) async {
-                            await _handleSignIn(userData);
-                          },
-                        )
-                      : const CircularProgressIndicator()),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+          body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/mobile/bg.png"),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: consumer(
+          builder: (BuildContext context, SignInGoogleProvider viewModel, _) =>
+              viewModel.state == ViewState.busy
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Center(
+                      child: UserService().currentUser == null
+                          ? ButtonConfiguratorDemo(
+                              onUserSignInSuccess:
+                                  (GoogleSignInUserData? userData) async {
+                                await _handleSignIn(userData);
+                              },
+                            )
+                          : const CircularProgressIndicator()),
+        ),
+      )),
     );
   }
 

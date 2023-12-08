@@ -16,10 +16,12 @@ class UserProvider extends BaseViewModel {
   final GameUsecase gameUsecase;
 
   updateUser() async {
-    setState(ViewState.busy);
     print('UserProvider.updateUser');
-    await userUsecase.fetch();
-    setState(ViewState.idle);
+    if (UserService().currentUser != null) {
+      setState(ViewState.busy);
+      await userUsecase.fetch();
+      setState(ViewState.idle);
+    }
   }
 
   void onUserTopUp(int number) async {

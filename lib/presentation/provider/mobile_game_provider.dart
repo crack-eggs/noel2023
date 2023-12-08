@@ -42,32 +42,32 @@ class MobileGameProvider extends BaseViewModel {
   void onUserGetGift() async {
     setState(ViewState.busy);
     final random = Random().nextInt(100) + 1;
-    final jackpotPercent =
+    final jackpotRange =
         ((AppSettings().settings?.jackpot ?? 0) / 3).round() + 1;
 
     final currentHammers = UserService().currentUser?.hammers ?? 0;
-    var giftPercent = calculateGiftPercent(currentHammers, jackpotPercent);
+    var giftRange = calculateGiftRange(currentHammers, jackpotRange);
 
-    await handleGift(random, jackpotPercent, giftPercent);
+    await handleGift(random, jackpotRange, giftRange);
 
     await usecase.fetch();
     setState(ViewState.idle);
   }
 
-  double calculateGiftPercent(int currentHammers, int jackpotPercent) {
-    if (currentHammers >= 10 && currentHammers < 90) {
-      final factor = 2 + ((currentHammers - 10) / 10).round() / 4;
-      return (100 - jackpotPercent) / factor + jackpotPercent;
-    } else {
-      return (100 - jackpotPercent) / 6 + jackpotPercent;
+  double calculateGiftRange(int currentHammers, int jackpotRange) {
+    if (currentHammers < 5) {
+      return (100 - jackpotRange) / 2 + jackpotRange;
     }
+
+    final factor = 2 + ((currentHammers - 5) / 10).round() / 1.5;
+    return (100 - jackpotRange) / factor + jackpotRange;
   }
 
   Future<void> handleGift(
-      int random, int jackpotPercent, double giftPercent) async {
-    if (random < jackpotPercent) {
+      int random, int jackpotRange, double giftRange) async {
+    if (random < jackpotRange) {
       await handleJackpot();
-    } else if (random < giftPercent) {
+    } else if (random < giftRange) {
       await handleGiftType();
     } else {
       await handleEmptyGift();
@@ -95,7 +95,7 @@ class MobileGameProvider extends BaseViewModel {
   }
 
   Future<void> handleGiftType() async {
-    final randomScore = Random().nextInt(50) + 50;
+    final randomScore = Random().nextInt(100) + 1;
 
     EventInApp().gameChannel.send(
         type: RealtimeListenTypes.broadcast,
@@ -122,7 +122,6 @@ class MobileGameProvider extends BaseViewModel {
           matchId: matchId, payload: {'giftType': GiftType.empty.name})
     ]);
   }
-
 
   void onUserTap() {
     onUserStopTap();

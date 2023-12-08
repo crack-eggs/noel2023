@@ -13,6 +13,7 @@ import 'package:noel/service/event_in_app.dart';
 import 'package:noel/service/realtime_service.dart';
 import 'package:noel/service/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import 'constants.dart';
 import 'di/injection.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         onGenerateRoute: AppRouter.router.generator,
         title: 'Game App',
+        // initialRoute: '/login?match_id=${const Uuid().v4()}',
         home: isWebMobile ? Container() : const HomePage(),
         builder: (context, widget) {
           Widget error = const Text('...rendering error...');

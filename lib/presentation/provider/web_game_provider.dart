@@ -19,7 +19,7 @@ class WebGameProvider extends BaseViewModel {
 
   EventType lastEventType = EventType.start;
 
-  int countdownToClose = 15;
+  int countdownToClose = 20;
 
   GiftType? lastGiftType;
   int score = 0;

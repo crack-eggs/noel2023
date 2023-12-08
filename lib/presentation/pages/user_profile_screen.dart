@@ -21,44 +21,54 @@ class _UserProfileScreenState extends State<UserProfileScreen>
   @override
   Widget createWidget(BuildContext context, UserProvider viewModel) {
     return Scaffold(
-        body: consumer(
-            builder: (BuildContext context, UserProvider viewModel, _) =>
-                viewModel.state == ViewState.busy
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Column(
-                        children: [
-                          Text(
-                              'Your point: ${UserService().currentUser?.score}'),
-                          Text(
-                              'Your hammers: ${UserService().currentUser?.hammers}'),
-                          if (UserService().currentUser!.hammers > 0)
-                            ElevatedButton(
-                                onPressed: () {
-                                  viewModel.onUserStartGame(widget.matchId,
-                                      onFailure: () {
-                                    AppToast.showError(
-                                        "Game id not valid, please try again with another id!");
-                                  });
-                                },
-                                child: const Text('Start Game')),
-                          if (UserService().currentUser!.hammers == 0)
-                            ElevatedButton(
-                                onPressed: () async {
-                                  final number = await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return TopUpPopup();
-                                    },
-                                  );
-                                  if (number != null) {
-                                    viewModel.onUserTopUp(number);
-                                  }
-                                },
-                                child: const Text('Top-up'))
-                        ],
-                      )));
+        body: Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/mobile/bg.png"),
+          fit: BoxFit.fill,
+        ),
+      ),
+      child: consumer(
+          builder: (BuildContext context, UserProvider viewModel, _) =>
+              viewModel.state == ViewState.busy
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Your point: ${UserService().currentUser?.score}'),
+                        Text(
+                            'Your hammers: ${UserService().currentUser?.hammers}'),
+                        if (UserService().currentUser!.hammers > 0)
+                          ElevatedButton(
+                              onPressed: () {
+                                viewModel.onUserStartGame(widget.matchId,
+                                    onFailure: () {
+                                  AppToast.showError(
+                                      "Game id not valid, please try again with another id!");
+                                });
+                              },
+                              child: const Text('Start Game')),
+                        if (UserService().currentUser!.hammers == 0)
+                          ElevatedButton(
+                              onPressed: () async {
+                                final number = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return TopUpPopup();
+                                  },
+                                );
+                                if (number != null) {
+                                  viewModel.onUserTopUp(number);
+                                }
+                              },
+                              child: const Text('Top-up'))
+                      ],
+                    )),
+    ));
   }
 
   @override
