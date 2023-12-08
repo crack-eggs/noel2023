@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:rive/rive.dart';
 import 'package:tiengviet/tiengviet.dart';
 
 import '../../constants.dart';
@@ -167,7 +168,8 @@ class _HomePageState extends State<HomePage>
                                 ..strokeWidth = 10
                                 ..color = primaryColor,
                             )),
-                        Text('+${viewModel.settings!.jackpot}',
+                        Text(
+                          '+${viewModel.settings!.jackpot}',
                           style: GoogleFonts.lilitaOne(
                             fontSize: 40,
                             letterSpacing: 5,
@@ -176,7 +178,7 @@ class _HomePageState extends State<HomePage>
                         ),
                       ],
                     ),
-                  )
+                  ),
               ],
             ),
           ),

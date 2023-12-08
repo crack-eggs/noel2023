@@ -110,6 +110,10 @@ gotrue
 2.17
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/gotrue-1.12.6/
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/gotrue-1.12.6/lib/
+graphs
+2.18
+file:///Users/duy.maid/.pub-cache/hosted/pub.dev/graphs-2.3.1/
+file:///Users/duy.maid/.pub-cache/hosted/pub.dev/graphs-2.3.1/lib/
 hive
 2.12
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/hive-2.2.3/
@@ -230,6 +234,14 @@ retry
 3.0
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/retry-3.1.2/
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/retry-3.1.2/lib/
+rive
+2.17
+file:///Users/duy.maid/.pub-cache/hosted/pub.dev/rive-0.12.3/
+file:///Users/duy.maid/.pub-cache/hosted/pub.dev/rive-0.12.3/lib/
+rive_common
+2.17
+file:///Users/duy.maid/.pub-cache/hosted/pub.dev/rive_common-0.2.8/
+file:///Users/duy.maid/.pub-cache/hosted/pub.dev/rive_common-0.2.8/lib/
 rxdart
 2.12
 file:///Users/duy.maid/.pub-cache/hosted/pub.dev/rxdart-0.27.7/

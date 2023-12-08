@@ -43,55 +43,86 @@ class MobileGameProvider extends BaseViewModel {
     setState(ViewState.busy);
     final random = Random().nextInt(100) + 1;
     final jackpotPercent =
-        ((AppSettings().settings?.jackpot ?? 0) / 2).round() + 1;
-    final giftPercent = (100 - jackpotPercent) / 2 + jackpotPercent;
-    if (random < jackpotPercent) {
-      /// get jackpot
-      EventInApp().gameChannel.send(
-          type: RealtimeListenTypes.broadcast,
-          event: EventType.getGift.name,
-          payload: {'giftType': GiftType.jackpot.name});
-      await Future.wait([
-        gameUsecase.updateJackpot(quantity: 0),
-        usecase.updateHammer(quantity: AppSettings().settings?.jackpot ?? 0)
-      ]);
-      await Future.wait([
-        AppSettings().fetch(),
-        gameUsecase.updateGame(
-            matchId: matchId, payload: {'giftType': GiftType.jackpot.name})
-      ]); // wait for update jackpot
-    } else if (random < giftPercent) {
-      /// get gift
-      final randomScore = Random().nextInt(50) + 50;
+        ((AppSettings().settings?.jackpot ?? 0) / 3).round() + 1;
 
-      EventInApp().gameChannel.send(
-          type: RealtimeListenTypes.broadcast,
-          event: EventType.getGift.name,
-          payload: {'giftType': GiftType.gift.name, 'gift': randomScore});
+    final currentHammers = UserService().currentUser?.hammers ?? 0;
+    var giftPercent = calculateGiftPercent(currentHammers, jackpotPercent);
 
-      await Future.wait([
-        usecase.updateScore(randomScore),
-        gameUsecase.updateGame(
-            matchId: matchId,
-            payload: {'giftType': GiftType.gift.name, 'gift': randomScore})
-      ]);
-    } else {
-      /// get empty
-      EventInApp().gameChannel.send(
-          type: RealtimeListenTypes.broadcast,
-          event: EventType.getGift.name,
-          payload: {'giftType': GiftType.empty.name});
-      await gameUsecase.updateJackpot();
-      await Future.wait([
-        AppSettings().fetch(),
-        gameUsecase.updateGame(
-            matchId: matchId, payload: {'giftType': GiftType.empty.name})
-      ]); //
-    }
+    await handleGift(random, jackpotPercent, giftPercent);
 
     await usecase.fetch();
     setState(ViewState.idle);
   }
+
+  double calculateGiftPercent(int currentHammers, int jackpotPercent) {
+    if (currentHammers >= 10 && currentHammers < 90) {
+      final factor = 2 + ((currentHammers - 10) / 10).round() / 4;
+      return (100 - jackpotPercent) / factor + jackpotPercent;
+    } else {
+      return (100 - jackpotPercent) / 6 + jackpotPercent;
+    }
+  }
+
+  Future<void> handleGift(
+      int random, int jackpotPercent, double giftPercent) async {
+    if (random < jackpotPercent) {
+      await handleJackpot();
+    } else if (random < giftPercent) {
+      await handleGiftType();
+    } else {
+      await handleEmptyGift();
+    }
+  }
+
+  Future<void> handleJackpot() async {
+    final randomJackpot =
+        Random().nextInt(AppSettings().settings?.jackpot ?? 0) + 1;
+
+    EventInApp().gameChannel.send(
+        type: RealtimeListenTypes.broadcast,
+        event: EventType.getGift.name,
+        payload: {'giftType': GiftType.jackpot.name});
+    await Future.wait([
+      gameUsecase.updateJackpot(
+          quantity: (AppSettings().settings?.jackpot ?? 0) - randomJackpot),
+      usecase.updateHammer(quantity: randomJackpot)
+    ]);
+    await Future.wait([
+      AppSettings().fetch(),
+      gameUsecase.updateGame(
+          matchId: matchId, payload: {'giftType': GiftType.jackpot.name})
+    ]);
+  }
+
+  Future<void> handleGiftType() async {
+    final randomScore = Random().nextInt(50) + 50;
+
+    EventInApp().gameChannel.send(
+        type: RealtimeListenTypes.broadcast,
+        event: EventType.getGift.name,
+        payload: {'giftType': GiftType.gift.name, 'gift': randomScore});
+
+    await Future.wait([
+      usecase.updateScore(randomScore),
+      gameUsecase.updateGame(
+          matchId: matchId,
+          payload: {'giftType': GiftType.gift.name, 'gift': randomScore})
+    ]);
+  }
+
+  Future<void> handleEmptyGift() async {
+    EventInApp().gameChannel.send(
+        type: RealtimeListenTypes.broadcast,
+        event: EventType.getGift.name,
+        payload: {'giftType': GiftType.empty.name});
+    await gameUsecase.updateJackpot();
+    await Future.wait([
+      AppSettings().fetch(),
+      gameUsecase.updateGame(
+          matchId: matchId, payload: {'giftType': GiftType.empty.name})
+    ]);
+  }
+
 
   void onUserTap() {
     onUserStopTap();

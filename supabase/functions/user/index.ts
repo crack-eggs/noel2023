@@ -152,16 +152,11 @@ Deno.serve(async (req) => {
 async function updateJackpot(supabase: SupabaseClient, body) {
   console.log('update jackpot')
 
-
   const { data, error } = await supabase
     .from('settings')
     .update(body)
     .eq('id', 1);
 
-  console.log('update jackpot', data)
-
-
-  console.log('update jackpot', error)
   if (error) return handleError(error)
   return new Response(JSON.stringify(data), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },

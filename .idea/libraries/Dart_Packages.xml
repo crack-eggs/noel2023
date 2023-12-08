@@ -362,6 +362,13 @@
             </list>
           </value>
         </entry>
+        <entry key="graphs">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/graphs-2.3.1/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="hive">
           <value>
             <list>
@@ -684,6 +691,20 @@
           <value>
             <list>
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/retry-3.1.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="rive">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/rive-0.12.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="rive_common">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/rive_common-0.2.8/lib" />
             </list>
           </value>
         </entry>
@@ -1221,6 +1242,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_sign_in_platform_interface-2.4.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_sign_in_web-0.12.0+4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/gotrue-1.12.6/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/graphs-2.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/hive-2.2.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/hive_flutter-1.1.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/html-0.15.2/lib" />
@@ -1270,6 +1292,8 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/quiver-3.2.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/realtime_client-1.4.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/retry-3.1.2/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/rive-0.12.3/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/rive_common-0.2.8/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/rxdart-0.27.7/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/shared_preferences-2.2.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.1/lib" />
