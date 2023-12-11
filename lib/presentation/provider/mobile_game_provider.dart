@@ -81,7 +81,9 @@ class MobileGameProvider extends BaseViewModel {
     EventInApp().gameChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.getGift.name,
-        payload: {'giftType': GiftType.jackpot.name, });
+        payload: {
+          'giftType': GiftType.jackpot.name,
+        });
     await Future.wait([
       gameUsecase.updateJackpot(
           quantity: (AppSettings().settings?.jackpot ?? 0) - randomJackpot),
@@ -89,8 +91,10 @@ class MobileGameProvider extends BaseViewModel {
     ]);
     await Future.wait([
       AppSettings().fetch(),
-      gameUsecase.updateGame(
-          matchId: matchId, payload: {'giftType': GiftType.jackpot.name, 'jackpot': randomJackpot})
+      gameUsecase.updateGame(matchId: matchId, payload: {
+        'giftType': GiftType.jackpot.name,
+        'jackpot': randomJackpot
+      })
     ]);
   }
 
@@ -123,7 +127,9 @@ class MobileGameProvider extends BaseViewModel {
     ]);
   }
 
-  void onUserTap() {
+  Future<void> onUserTap() async{
+    await usecase.reduceHammer();
+    await usecase.fetch();
     onUserStopTap();
     onUserGetGift();
   }
@@ -138,8 +144,7 @@ class MobileGameProvider extends BaseViewModel {
         setState(ViewState.idle);
         return;
       }
-      await usecase.reduceHammer();
-      await usecase.fetch();
+
 
       stateGame = StateGame.start;
       EventInApp().gameChannel.send(
@@ -153,13 +158,14 @@ class MobileGameProvider extends BaseViewModel {
   void init(String matchId) {
     this.matchId = matchId;
     setState(ViewState.busy);
+    if (UserService().currentUser!.hammers > 0) {
+      stateGame = StateGame.start;
+      EventInApp().gameChannel.send(
+          type: RealtimeListenTypes.broadcast,
+          event: EventType.startTap.name,
+          payload: {});
 
-    stateGame = StateGame.start;
-    EventInApp().gameChannel.send(
-        type: RealtimeListenTypes.broadcast,
-        event: EventType.startTap.name,
-        payload: {});
-
-    setState(ViewState.idle);
+      setState(ViewState.idle);
+    }
   }
 }

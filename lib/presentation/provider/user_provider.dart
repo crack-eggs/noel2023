@@ -43,9 +43,9 @@ class UserProvider extends BaseViewModel {
       onFailure();
     }
     if (UserService().currentUser!.hammers > 0) {
-      await userUsecase.reduceHammer();
+      // await userUsecase.reduceHammer();
       await Future.wait([
-        userUsecase.fetch(),
+        // userUsecase.fetch(),
         EventInApp().gameChannel.send(
             type: RealtimeListenTypes.broadcast,
             event: EventType.start.name,
