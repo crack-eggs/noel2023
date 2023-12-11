@@ -81,7 +81,7 @@ class MobileGameProvider extends BaseViewModel {
     EventInApp().gameChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.getGift.name,
-        payload: {'giftType': GiftType.jackpot.name});
+        payload: {'giftType': GiftType.jackpot.name, });
     await Future.wait([
       gameUsecase.updateJackpot(
           quantity: (AppSettings().settings?.jackpot ?? 0) - randomJackpot),
@@ -90,7 +90,7 @@ class MobileGameProvider extends BaseViewModel {
     await Future.wait([
       AppSettings().fetch(),
       gameUsecase.updateGame(
-          matchId: matchId, payload: {'giftType': GiftType.jackpot.name})
+          matchId: matchId, payload: {'giftType': GiftType.jackpot.name, 'jackpot': randomJackpot})
     ]);
   }
 
