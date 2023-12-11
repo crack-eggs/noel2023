@@ -68,6 +68,10 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
 
   @override
   void onVMReady(MobileGameProvider viewModel, BuildContext context) {
-    viewModel.init(widget.matchId);
+    if (UserService().currentUser!.hammers > 0) {
+      viewModel.init(widget.matchId);
+    } else {
+      AppToast.showError("You don't have any hammers! Please buy some!");
+    }
   }
 }

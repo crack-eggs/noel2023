@@ -37,6 +37,9 @@ class WebHomeProvider extends BaseViewModel {
   Settings? settings;
 
   String getUUID() {
+    if (_uuid.isNotEmpty) {
+      gameUsecase.markGameAsDone(matchId: _uuid);
+    }
     _uuid = const Uuid().v4();
     return _uuid;
   }
