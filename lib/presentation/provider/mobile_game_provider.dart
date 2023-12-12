@@ -181,7 +181,8 @@ class MobileGameProvider extends BaseViewModel {
           event: EventType.startTap.name,
           payload: {});
 
-      setState(ViewState.idle);
     }
+    setState(ViewState.idle);
+
   }
 }

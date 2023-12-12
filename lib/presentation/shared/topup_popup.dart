@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noel/constants.dart';
 
 class TopUpPopup extends StatefulWidget {
   @override
@@ -10,53 +11,111 @@ class _TopUpPopupState extends State<TopUpPopup> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Top Up Hammers'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Choose the number of hammers to top up:'),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.remove),
-                onPressed: () {
-                  setState(() {
-                    if (_numberOfHammers > 1) {
-                      _numberOfHammers--;
-                    }
-                  });
-                },
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: Stack(
+            clipBehavior: Clip.none,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 0),
+              child: Image.asset(
+                'assets/mobile/popup.png',
+                fit: BoxFit.fitWidth,
               ),
-              Text('$_numberOfHammers'),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () {
-                  setState(() {
-                    _numberOfHammers++;
-                  });
-                },
+            ),
+            Positioned(
+                top: 80,
+                left: 40,
+                child: Image.asset('assets/mobile/topup_text.png', height: 40)),
+            Positioned(
+              top: 140,
+              left: 0,
+              right: 0,
+              child: Image.asset(
+                'assets/home/bua4x.png',
+                width: 60,
+                height: 60,
               ),
-            ],
-          ),
-        ],
+            ),
+            Positioned(
+                top: 210,
+                left: 0,
+                right: 0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 160,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(40),
+                          border: Border.all(color: Colors.white, width: 1)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.remove,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                if (_numberOfHammers > 1) {
+                                  _numberOfHammers--;
+                                }
+                              });
+                            },
+                          ),
+                          Container(
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle, color: primaryColor),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(
+                                '$_numberOfHammers',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 24),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _numberOfHammers++;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )),
+            Positioned(
+              left: 0,
+              bottom: -40,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('TopUp'),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
-          },
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop(_numberOfHammers); // Close the dialog after topping up
-          },
-          child: const Text('Top Up'),
-        ),
-      ],
     );
   }
 }
