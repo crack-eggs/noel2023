@@ -1,7 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
-import 'package:noel/constants.dart';
 import 'package:noel/utils/toast.dart';
 import '../../enums.dart';
 import '../../service/user_service.dart';
@@ -45,25 +45,51 @@ class _SignInGoogleScreenState extends State<SignInGoogleScreen>
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/mobile/bg.png"),
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
           ),
         ),
         child: consumer(
-          builder: (BuildContext context, SignInGoogleProvider viewModel, _) =>
-              viewModel.state == ViewState.busy
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Center(
-                      child: UserService().currentUser == null
-                          ? ButtonConfiguratorDemo(
-                              onUserSignInSuccess:
-                                  (GoogleSignInUserData? userData) async {
-                                await _handleSignIn(userData);
-                              },
-                            )
-                          : const CircularProgressIndicator()),
-        ),
+            builder:
+                (BuildContext context, SignInGoogleProvider viewModel, _) =>
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 14,
+                        ),
+                        _buildBanner(),
+                        Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Image.asset(
+                              'assets/mobile/snow.png',
+                              fit: BoxFit.fitWidth,
+                              width: double.infinity,
+                            ),
+                            viewModel.state == ViewState.busy
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Center(
+                                    child: UserService().currentUser == null
+                                        ? ButtonConfiguratorDemo(
+                                            onUserSignInSuccess:
+                                                (GoogleSignInUserData?
+                                                    userData) async {
+                                              await _handleSignIn(userData);
+                                            },
+                                          )
+                                        : const CircularProgressIndicator()),
+                          ],
+                        ),
+                        const Expanded(child: SizedBox()),
+                        Image.asset(
+                          'assets/mobile/bottom.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ],
+                    )),
       )),
     );
   }
@@ -78,5 +104,29 @@ class _SignInGoogleScreenState extends State<SignInGoogleScreen>
       AppToast.showError(
           "Game id not valid, please try again with another id!");
     });
+  }
+
+  Widget _buildBanner() {
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        Image.asset(
+          'assets/mobile/banner.png',
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: SizedBox(
+            width: 220,
+            child: Text('LOGIN',
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.lilitaOne(
+                  textStyle: const TextStyle(color: Colors.white, fontSize: 24),
+                )),
+          ),
+        ),
+      ],
+    );
   }
 }

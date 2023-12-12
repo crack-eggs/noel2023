@@ -59,7 +59,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         onGenerateRoute: AppRouter.router.generator,
         title: 'Game App',
-        // initialRoute: '/login?match_id=${const Uuid().v4()}',
+        theme: ThemeData(
+          primaryColor: primaryColor,
+        ),
+        initialRoute: '/login?match_id=${const Uuid().v4()}',
         home: isWebMobile ? Container() : const HomePage(),
         builder: (context, widget) {
           Widget error = const Text('...rendering error...');

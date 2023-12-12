@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/src/animation/animation_controller.dart';
 import 'package:noel/constants.dart';
 import 'package:noel/service/app_settings_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -29,18 +30,22 @@ class MobileGameProvider extends BaseViewModel {
 
   late String matchId;
 
+  AnimationController? _controller;
+
+  setController(AnimationController controller) {
+    _controller = controller;
+  }
+
   void onUserStopTap() {
     print('MobileGameProvider.onUserStopTap');
     stateGame = StateGame.end;
-    setState(ViewState.idle);
     EventInApp().gameChannel.send(
         type: RealtimeListenTypes.broadcast,
         event: EventType.stopTap.name,
         payload: {});
   }
 
-  void onUserGetGift() async {
-    setState(ViewState.busy);
+  Future<void> onUserGetGift() async {
     final random = Random().nextInt(100) + 1;
     final jackpotRange =
         ((AppSettings().settings?.jackpot ?? 0) / 3).round() + 1;
@@ -49,8 +54,6 @@ class MobileGameProvider extends BaseViewModel {
     var giftRange = calculateGiftRange(currentHammers, jackpotRange);
 
     await handleGift(random, jackpotRange, giftRange);
-
-    await usecase.fetch();
     setState(ViewState.idle);
   }
 
@@ -127,15 +130,29 @@ class MobileGameProvider extends BaseViewModel {
     ]);
   }
 
-  Future<void> onUserTap() async{
-    await usecase.reduceHammer();
-    await usecase.fetch();
-    onUserStopTap();
-    onUserGetGift();
+  Future<void> onUserTap() async {
+    countTap++;
+    _controller?.forward(from: 0.0);
+    setState(ViewState.idle);
+    if (countTap == 1) {
+      await usecase.reduceHammer();
+      await usecase.fetch();
+    }
+    if (countTap == 30) {
+      countTap = 0;
+      setState(ViewState.busy);
+
+      onUserStopTap();
+      await onUserGetGift();
+      await usecase.fetch();
+      setState(ViewState.idle);
+      return;
+    }
   }
 
   void onUserContinue({required Function onFailure}) async {
     setState(ViewState.busy);
+    countTap = 0;
 
     if (UserService().currentUser!.hammers > 0) {
       final validate = await gameUsecase.checkGameValidation(matchId);
@@ -144,7 +161,6 @@ class MobileGameProvider extends BaseViewModel {
         setState(ViewState.idle);
         return;
       }
-
 
       stateGame = StateGame.start;
       EventInApp().gameChannel.send(

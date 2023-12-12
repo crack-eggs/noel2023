@@ -23,31 +23,6 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
 
   @override
   Widget createWidget(BuildContext context, WebGameProvider viewModel) {
-    // return WillPopScope(
-    //   onWillPop: () async => false,
-    //   child: consumer(
-    //     builder: (BuildContext context, WebGameProvider viewModel, _) =>
-    //         Scaffold(
-    //             body: Column(
-    //               children: [
-    //                 RotationTransition(
-    //                   turns: Tween(begin: -0.02, end: 0.02).animate(_controller),
-    //                   child: const Icon(Icons.egg_outlined, size: 300),
-    //                 ),
-    //                 ElevatedButton(
-    //                     onPressed: () {
-    //                       viewModel.onUserBackToHome();
-    //                       Navigator.pop(context);
-    //                     },
-    //                     child: const Text('Back')),
-    //                 viewModel.lastEventType == EventType.getGift
-    //                     ? Text('Countdown to close: ${viewModel.countdownToClose}')
-    //                     : const SizedBox()
-    //               ],
-    //             )),
-    //   ),
-    // );
-
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
