@@ -138,6 +138,12 @@ class MobileGameProvider extends BaseViewModel {
         onFailure();
         return;
       }
+      final validate = await gameUsecase.checkGameValidation(matchId);
+      if (validate == false) {
+        onFailure();
+        setState(ViewState.idle);
+        return;
+      }
 
       countTap++;
       _controller?.forward(from: 0.0);
@@ -159,7 +165,6 @@ class MobileGameProvider extends BaseViewModel {
   }
 
   void onUserContinue({required Function onFailure}) async {
-    print('MobileGameProvider.onUserContinue');
     setState(ViewState.busy);
     countTap = 0;
 

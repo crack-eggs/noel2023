@@ -145,12 +145,20 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
                     height: 100,
                   ),
                 ),
-                ElevatedButton(
-                    onPressed: () {
+                Positioned(
+                  right: 60,
+                  top: 60,
+                  child: GestureDetector(
+                    onTap: () {
                       viewModel.onUserBackToHome();
                       Navigator.pop(context);
                     },
-                    child: const Text('Back')),
+                    child: Image.asset(
+                      'assets/home/close.png',
+                      width: 60,
+                    ),
+                  ),
+                ),
                 viewModel.lastEventType == EventType.getGift
                     ? Text('Countdown to close: ${viewModel.countdownToClose}')
                     : const SizedBox()

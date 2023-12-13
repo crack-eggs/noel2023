@@ -354,29 +354,26 @@ class _HomePageState extends State<HomePage>
                   fit: BoxFit.fill,
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 70),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        'To verify yourself\nPlease scan this QR code with your phone',
-                        style: TextStyle(fontSize: 30),
-                      ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'To verify yourself\nPlease scan this QR code with your phone',
+                      style: TextStyle(fontSize: 30),
                     ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    QrImageView(
-                      data:
-                          'https://sunny-arithmetic-f4b9c6.netlify.app/#/login?match_id=${viewModel.getUUID()}',
-                      size: 220,
-                    )
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  QrImageView(
+                    data:
+                        'https://sunny-arithmetic-f4b9c6.netlify.app/#/login?match_id=${viewModel.getUUID()}',
+                    size: 220,
+                  )
+                ],
               ),
             ),
           ),
