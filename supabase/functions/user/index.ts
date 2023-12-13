@@ -187,9 +187,11 @@ async function getLeaderBoard(supabase: SupabaseClient) {
 
 async function matchValidate(supabase: SupabaseClient, matchId: string) {
 
-  const { data: match, error } = await supabase.from('match_status').select('id').order('created_at', { ascending: false }).limit(1)
+  const { data: match, error } = await supabase.from('match_status').select('*').order('created_at', { ascending: false }).limit(1)
   if (error) return handleError(error)
-  if (match[0].id !== matchId || match.length == 0 || match[0].available == false) return new Response(JSON.stringify(false), {
+  console.log('match', match)
+  console.log('match[0].available', match[0].available)
+  if (match[0].id !== matchId || match.length == 0 || match[0].available === false) return new Response(JSON.stringify(false), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     status: 200,
   })

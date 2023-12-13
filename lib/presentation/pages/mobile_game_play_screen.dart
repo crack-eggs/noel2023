@@ -166,8 +166,8 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
       children: [
         GestureDetector(
           onTap: () {
-            viewModel.onUserTap(onFailure: () {
-              AppToast.showError("Your hammer is not enough!");
+            viewModel.onUserTap(onFailure: (String error) {
+              AppToast.showError(error);
             });
           },
           child: Image.asset(
@@ -177,8 +177,8 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
         ),
         GestureDetector(
           onTap: () {
-            viewModel.onUserTap(onFailure: () {
-              AppToast.showError("Your hammer is not enough!");
+            viewModel.onUserTap(onFailure: (String error) {
+              AppToast.showError(error);
             });
           },
           child: Image.asset(

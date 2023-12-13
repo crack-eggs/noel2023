@@ -130,17 +130,17 @@ class MobileGameProvider extends BaseViewModel {
     ]);
   }
 
-  Future<void> onUserTap({required Function onFailure}) async {
+  Future<void> onUserTap({required Function(String) onFailure}) async {
     _controller?.forward(from: 0.0);
     setState(ViewState.idle);
     if (countTap == 0) {
       if (UserService().currentUser!.hammers == 0) {
-        onFailure();
+        onFailure('Your hammer is not enough!');
         return;
       }
       final validate = await gameUsecase.checkGameValidation(matchId);
       if (validate == false) {
-        onFailure();
+        onFailure('Game id is not valid! Please try again later.');
         setState(ViewState.idle);
         return;
       }
