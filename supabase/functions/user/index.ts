@@ -190,12 +190,14 @@ async function matchValidate(supabase: SupabaseClient, matchId: string) {
   const { data: match, error } = await supabase.from('match_status').select('id').order('created_at', { ascending: false }).limit(1)
   if (error) return handleError(error)
   console.log('match', match)
+  console.log('matchId', matchId)
+  console.log(match[0].id !== matchId)
   if (match[0].id !== matchId || match.length == 0) return new Response(JSON.stringify(false), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     status: 200,
   })
 
-  return new Response(JSON.stringify(match[0].available), {
+  return new Response(JSON.stringify(true), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     status: 200,
   })

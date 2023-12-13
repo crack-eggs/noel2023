@@ -63,10 +63,10 @@ class WebHomeProvider extends BaseViewModel {
 
   void init() {
     fetchLeaderboard();
-    // _timer ??= Timer.periodic(const Duration(seconds: 10), (timer) {
-    //   fetchLeaderboard();
-    //   _getSettings();
-    // });
+    _timer ??= Timer.periodic(const Duration(seconds: 10), (timer) {
+      fetchLeaderboard();
+      _getSettings();
+    });
     _getSettings();
   }
 

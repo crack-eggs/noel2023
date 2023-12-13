@@ -43,14 +43,10 @@ class UserProvider extends BaseViewModel {
       return;
     }
     if (UserService().currentUser!.hammers > 0) {
-      // await userUsecase.reduceHammer();
-      await Future.wait([
-        // userUsecase.fetch(),
-        EventInApp().gameChannel.send(
-            type: RealtimeListenTypes.broadcast,
-            event: EventType.start.name,
-            payload: {})
-      ]);
+      EventInApp().gameChannel.send(
+          type: RealtimeListenTypes.broadcast,
+          event: EventType.start.name,
+          payload: {});
 
       AppRouter.router.navigateTo(
           navigatorService.context!, '/mobile-game-play?match_id=$matchId');
