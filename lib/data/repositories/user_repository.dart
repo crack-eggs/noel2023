@@ -99,7 +99,7 @@ class UserRepositoryImpl implements UserRepository {
         'email': UserService().currentUser!.email,
       }, data: {
         'email': UserService().currentUser!.email,
-        'quantity': quantity,
+        'quantity': UserService().currentUser!.hammers + quantity,
       });
     } catch (e) {
       print('error: ${e.toString()}');

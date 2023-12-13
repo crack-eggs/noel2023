@@ -25,7 +25,6 @@ class UserProvider extends BaseViewModel {
   }
 
   void onUserTopUp(int number) async {
-    print('UserProvider.onUserTopUp');
     setState(ViewState.busy);
     await userUsecase.topup(number);
     await userUsecase.fetch();

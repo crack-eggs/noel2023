@@ -7,6 +7,7 @@ import 'package:tiengviet/tiengviet.dart';
 import '../../service/user_service.dart';
 import '../provider/mobile_game_provider.dart';
 import '../shared/base_view.dart';
+import '../shared/topup_popup.dart';
 
 class MobileGamePlayScreen extends StatefulWidget {
   const MobileGamePlayScreen({Key? key, required this.matchId})
@@ -88,40 +89,58 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
                           ? 'assets/mobile/more_text.png'
                           : 'assets/mobile/topup_text.png',
                       height:
-                          (UserService().currentUser!.hammers > 0) ? 60 : 100,
+                          (UserService().currentUser!.hammers > 0) ? 60 : 50,
                       fit: BoxFit.fitHeight,
                     ),
-                    Positioned(
-                      bottom: -15,
-                      right: 0,
-                      left: 0,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            print('_MobileGamePlayScreenState.createWidget');
-                            if (UserService().currentUser!.hammers > 0) {
-                              viewModel.onUserContinue(
-                                onFailure: () {
-                                  AppToast.showError(
-                                      "Game id not valid, please try again with another id!");
-                                },
-                              );
-                            }
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              (UserService().currentUser!.hammers > 0)
-                                  ? 'Play'
-                                  : 'TopUp',
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
+                ),
+              ),
+            if (viewModel.stateGame == StateGame.end)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    print('_MobileGamePlayScreenState.createWidget');
+                    if (UserService().currentUser!.hammers > 0) {
+                      viewModel.onUserContinue(
+                        onFailure: () {
+                          AppToast.showError(
+                              "Game id not valid, please try again with another id!");
+                        },
+                      );
+                    } else {
+                      final number = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const TopUpPopup();
+                        },
+                      );
+                      if (number != null) {
+                        await showDialog(
+                          builder: (BuildContext context) {
+                            return ConfirmPopUp(number: number);
+                          },
+                          context: context,
+                        );
+                        await viewModel.onUserTopUp(number);
+                        viewModel.onUserContinue(
+                          onFailure: () {
+                            AppToast.showError(
+                                "Game id not valid, please try again with another id!");
+                          },
+                        );
+                      }
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      (UserService().currentUser!.hammers > 0)
+                          ? 'Play'
+                          : 'TopUp',
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
                 ),
               ),
             const Expanded(child: SizedBox()),

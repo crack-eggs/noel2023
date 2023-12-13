@@ -137,6 +137,7 @@ class MobileGameProvider extends BaseViewModel {
     if (countTap == 1) {
       await usecase.reduceHammer();
       await usecase.fetch();
+      setState(ViewState.idle);
     }
     if (countTap == 30) {
       countTap = 0;
@@ -151,6 +152,7 @@ class MobileGameProvider extends BaseViewModel {
   }
 
   void onUserContinue({required Function onFailure}) async {
+    print('MobileGameProvider.onUserContinue');
     setState(ViewState.busy);
     countTap = 0;
 
@@ -180,9 +182,15 @@ class MobileGameProvider extends BaseViewModel {
           type: RealtimeListenTypes.broadcast,
           event: EventType.startTap.name,
           payload: {});
-
     }
     setState(ViewState.idle);
+  }
 
+  Future<void> onUserTopUp(int number) async {
+    setState(ViewState.busy);
+    await usecase.topup(number);
+    await usecase.fetch();
+
+    setState(ViewState.idle);
   }
 }

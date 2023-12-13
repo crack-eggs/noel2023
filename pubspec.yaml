@@ -55,6 +55,7 @@ dependencies:
   tiengviet:
   fluttertoast:
   rive:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:

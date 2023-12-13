@@ -145,33 +145,39 @@ class _UserProfileScreenState extends State<UserProfileScreen>
             style: GoogleFonts.lilitaOne(
               textStyle: const TextStyle(color: Colors.white, fontSize: 24),
             )),
-        if (UserService().currentUser?.hammers == 0)
-          GestureDetector(
-            onTap: () async {
-              final number = await showDialog(
-                context: context,
+        // if (UserService().currentUser?.hammers == 0)
+        GestureDetector(
+          onTap: () async {
+            final number = await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const TopUpPopup();
+              },
+            );
+            if (number != null) {
+              viewModel.onUserTopUp(number);
+              showDialog(
                 builder: (BuildContext context) {
-                  return TopUpPopup();
+                  return ConfirmPopUp(number: number);
                 },
+                context: context,
               );
-              if (number != null) {
-                viewModel.onUserTopUp(number);
-              }
-            },
-            child: Container(
-              margin: const EdgeInsets.only(left: 8),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Colors.yellow[700]),
-              child: const Padding(
-                padding: EdgeInsets.all(2.0),
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 20,
-                ),
+            }
+          },
+          child: Container(
+            margin: const EdgeInsets.only(left: 8),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: Colors.yellow[700]),
+            child: const Padding(
+              padding: EdgeInsets.all(2.0),
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 20,
               ),
             ),
           ),
+        ),
         const SizedBox(
           width: 32,
         ),

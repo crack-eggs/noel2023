@@ -63,7 +63,9 @@ class MyApp extends StatelessWidget {
           primaryColor: primaryColor,
         ),
         initialRoute: '/login?match_id=${const Uuid().v4()}',
-        home: isWebMobile ? Container() : const HomePage(),
+        home: !isWebMobile ? Container() : const HomePage(),
+
+        // home: isWebMobile ? Container() : const HomePage(),
         builder: (context, widget) {
           Widget error = const Text('...rendering error...');
           if (widget is Scaffold || widget is Navigator) {
