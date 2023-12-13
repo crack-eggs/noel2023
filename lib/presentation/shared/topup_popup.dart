@@ -21,36 +21,44 @@ class _TopUpPopupState extends State<TopUpPopup> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 0),
-                  child: Image.asset(
-                    'assets/mobile/popup.png',
-                    fit: BoxFit.fitWidth,
-                  ),
+            Container(
+              margin: const EdgeInsets.only(left: 16, right: 0),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/mobile/popup.png"),
+                  fit: BoxFit.fill,
                 ),
-                Positioned(
-                    top: 80,
-                    left: 40,
-                    child: Image.asset('assets/mobile/topup_text.png',
-                        height: 40)),
-                Positioned(
-                  top: 120,
-                  left: 0,
-                  right: 0,
-                  child: Image.asset(
-                    'assets/home/bua4x.png',
-                    width: 60,
-                    height: 60,
-                  ),
-                ),
-                Positioned(
-                    top: 200,
-                    left: 0,
-                    right: 0,
-                    child: Row(
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 80,
+                    ),
+                    Image.asset('assets/mobile/topup_text.png', width: 200),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/home/bua4x.png',
+                          width: 80,
+                          height: 80,
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -83,7 +91,7 @@ class _TopUpPopupState extends State<TopUpPopup> {
                                     shape: BoxShape.circle,
                                     color: primaryColor),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(12),
+                                  padding: const EdgeInsets.all(8),
                                   child: Text(
                                     '$_numberOfHammers',
                                     textAlign: TextAlign.center,
@@ -105,10 +113,18 @@ class _TopUpPopupState extends State<TopUpPopup> {
                               ),
                             ],
                           ),
-                        )
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
                       ],
-                    )),
-              ],
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(
               height: 12,
@@ -150,62 +166,67 @@ class _ConfirmPopUpState extends State<ConfirmPopUp> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 0),
-                  child: Image.asset(
-                    'assets/mobile/popup.png',
-                    fit: BoxFit.fitWidth,
-                  ),
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 16, right: 0),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/mobile/popup.png"),
+                  fit: BoxFit.fill,
                 ),
-                Positioned(
-                    top: 80,
-                    left: 40,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 250,
-                          child: Text(
-                              'We have successfully recorded your transaction for the purchase of ${widget.number.toString()} hammers.',
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        const SizedBox(
-                          width: 320,
-                          child: Text(
-                              'With each hammer you buy, you have contributed 5,000 VND to the OTSV charity fund.\n\nYou can contribute directly here, or we will send you a statement at the end of the program',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              launchUrl(Uri(
-                                  scheme: 'https',
-                                  host: 'page.momoapp.vn',
-                                  path: '/SsWKrH3512c'));
-                            },
-                            child: const Text('Momo Link',
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold)))
-                      ],
-                    )),
-              ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 80,
+                    ),
+                    SizedBox(
+                      width: 250,
+                      child: Text(
+                          'We have successfully recorded your transaction for the purchase of ${widget.number.toString()} hammers.',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right: MediaQuery.of(context).size.width / 8),
+                      child: const Text(
+                          'With each hammer you buy, you have contributed 5,000 VND to the OTSV charity fund.\n\nYou can contribute directly here, or we will send you a statement at the end of the program',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          launchUrl(Uri(
+                              scheme: 'https',
+                              host: 'page.momoapp.vn',
+                              path: '/SsWKrH3512c'));
+                        },
+                        child: const Text('Momo Link',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold))),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(
               height: 12,

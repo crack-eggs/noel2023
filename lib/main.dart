@@ -31,6 +31,7 @@ final dio = Dio(
 );
 
 void main() async {
+  print('main');
   dio.interceptors.add(DioLogInterceptor());
 
   await googleSignIn.initWithParams(const SignInInitParameters(

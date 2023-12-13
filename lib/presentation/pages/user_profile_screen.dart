@@ -145,7 +145,6 @@ class _UserProfileScreenState extends State<UserProfileScreen>
             style: GoogleFonts.lilitaOne(
               textStyle: const TextStyle(color: Colors.white, fontSize: 24),
             )),
-        // if (UserService().currentUser?.hammers == 0)
         GestureDetector(
           onTap: () async {
             final number = await showDialog(
