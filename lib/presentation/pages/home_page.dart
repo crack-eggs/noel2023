@@ -92,10 +92,6 @@ class _HomePageState extends State<HomePage>
                                 : 20),
                     child: GestureDetector(
                       onTap: () async {
-                        // ///todo test
-                        //
-                        // AppRouter.router
-                        //     .navigateTo(context, '/web-game-play?match_id=${viewModel.uuid}');
                         viewModel
                             .changeSizeButton(WebHomeProvider.btnSmallSize);
                         await Future.delayed(const Duration(milliseconds: 100));
@@ -305,6 +301,7 @@ class _HomePageState extends State<HomePage>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       viewModel.loaded();
       viewModel.watch(onEvent: () {
+        if (_ctxPopup != null) Navigator.pop(_ctxPopup!);
         AppRouter.router
             .navigateTo(context, '/web-game-play?match_id=${viewModel.uuid}');
       });
@@ -333,16 +330,19 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  BuildContext? _ctxPopup;
+
   void showQrCode() {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (BuildContext context) {
+      builder: (BuildContext ctx) {
+        _ctxPopup = ctx;
         return Dialog(
           backgroundColor: Colors.transparent,
           child: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pop(ctx);
             },
             child: Container(
               width: 1300,

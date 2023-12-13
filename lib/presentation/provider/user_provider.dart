@@ -40,6 +40,7 @@ class UserProvider extends BaseViewModel {
     if (validate == false) {
       setState(ViewState.idle);
       onFailure();
+      return;
     }
     if (UserService().currentUser!.hammers > 0) {
       // await userUsecase.reduceHammer();
