@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage>
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 50),
                     child: Image.asset(
-                      randomEggPath(),
+                      'assets/home/egg_center_1.png',
                       height: 500,
                       fit: BoxFit.fitHeight,
                     ),

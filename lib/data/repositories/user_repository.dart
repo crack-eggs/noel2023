@@ -108,6 +108,7 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<void> reduceHammer() async {
+    if (UserService().currentUser!.hammers == 0) return;
     try {
       await dio.patch('/user', queryParameters: {
         'code': encryptBlowfish(),

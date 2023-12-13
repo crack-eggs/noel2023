@@ -64,7 +64,7 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
                         const SizedBox(
                           height: 100,
                         ),
-                        _buildTap(),
+                        if (UserService().currentUser!.hammers > 0) _buildTap(),
                       ],
                     ),
             if (viewModel.stateGame == StateGame.end)
@@ -88,9 +88,9 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
                       (UserService().currentUser!.hammers > 0)
                           ? 'assets/mobile/more_text.png'
                           : 'assets/mobile/topup_text.png',
-                      height:
-                          (UserService().currentUser!.hammers > 0) ? 60 : 50,
-                      fit: BoxFit.fitHeight,
+                      width:
+                          (UserService().currentUser!.hammers > 0) ? 200 : 220,
+                      fit: BoxFit.fitWidth,
                     ),
                   ],
                 ),

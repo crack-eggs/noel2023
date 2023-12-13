@@ -131,23 +131,23 @@ class MobileGameProvider extends BaseViewModel {
   }
 
   Future<void> onUserTap() async {
-    countTap++;
-    _controller?.forward(from: 0.0);
-    setState(ViewState.idle);
-    if (countTap == 1) {
-      await usecase.reduceHammer();
-      await usecase.fetch();
+      countTap++;
+      _controller?.forward(from: 0.0);
       setState(ViewState.idle);
-    }
-    if (countTap == 30) {
-      countTap = 0;
-      setState(ViewState.busy);
+      if (countTap == 1) {
+        await usecase.reduceHammer();
+        await usecase.fetch();
+        setState(ViewState.idle);
+      }
+      if (countTap == 30) {
+        countTap = 0;
+        setState(ViewState.busy);
 
-      onUserStopTap();
-      await onUserGetGift();
-      await usecase.fetch();
-      setState(ViewState.idle);
-      return;
+        onUserStopTap();
+        await onUserGetGift();
+        await usecase.fetch();
+        setState(ViewState.idle);
+        return;
     }
   }
 
