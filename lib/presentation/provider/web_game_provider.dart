@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:noel/domain/usecases/game_usecase.dart';
 import 'package:noel/service/event_in_app.dart';
-import 'package:noel/utils/toast.dart';
-import '../../constants.dart';
 import '../../service/app_settings_service.dart';
 import '../shared/base_view_model.dart';
 import '../../enums.dart';
@@ -19,7 +16,7 @@ class WebGameProvider extends BaseViewModel {
 
   EventType lastEventType = EventType.start;
 
-  int countdownToClose = 20;
+  int countdownToClose = 30;
 
   GiftType? lastGiftType;
   int score = 0;
@@ -42,12 +39,11 @@ class WebGameProvider extends BaseViewModel {
   }
 
   _triggerCountDown() {
+    countdownToClose = 30;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      print('countdownToClose: $countdownToClose');
       if (countdownToClose == 0) {
         _timer?.cancel();
         onUserBackToHome();
-        if (pop != null) pop!();
       } else {
         countdownToClose--;
         setState(ViewState.idle);
@@ -62,24 +58,23 @@ class WebGameProvider extends BaseViewModel {
         return;
       }
       lastEventType = event.eventType;
-      print('lastEventType: $lastEventType');
+
       if (event.eventType == EventType.restartGame) {
         _controller.repeat(reverse: true);
         _timer?.cancel();
+        setState(ViewState.idle);
       }
 
       if (event.eventType == EventType.startTap) {
         _controller.repeat(reverse: true);
-      }
-
-      if (event.eventType == EventType.stopTap) {
-        _controller.stop();
+        _timer?.cancel();
+        setState(ViewState.idle);
       }
 
       if (event.eventType == EventType.getGift) {
         _controller.stop();
 
-        // _triggerCountDown();
+        _triggerCountDown();
 
         final giftType = event.payload['payload']['giftType'];
         if (giftType == GiftType.jackpot.name) {
@@ -112,6 +107,8 @@ class WebGameProvider extends BaseViewModel {
   }
 
   void onUserBackToHome() {
+    if (pop != null) pop!();
+
     gameUsecase.markGameAsDone(matchId: matchId);
   }
 }

@@ -1,11 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/src/animation/animation_controller.dart';
-import 'package:noel/constants.dart';
 import 'package:noel/service/app_settings_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../data/models/game_model.dart';
 import '../../domain/usecases/game_usecase.dart';
 import '../../domain/usecases/user_usecase.dart';
 import '../../enums.dart';

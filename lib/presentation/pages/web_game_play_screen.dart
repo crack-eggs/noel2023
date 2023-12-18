@@ -148,15 +148,42 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
                 Positioned(
                   right: 60,
                   top: 60,
-                  child: GestureDetector(
-                    onTap: () {
-                      viewModel.onUserBackToHome();
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      'assets/home/close.png',
-                      width: 60,
-                    ),
+                  child: Row(
+                    children: [
+                      if (viewModel.lastEventType == EventType.getGift)
+                        Stack(
+                          children: [
+                            Text(
+                                'Return to Home after \n${viewModel.countdownToClose} second(s)',
+                                textAlign: TextAlign.right,
+                                style: GoogleFonts.lilitaOne(
+                                  fontSize: 22,
+                                  foreground: Paint()
+                                    ..style = PaintingStyle.stroke
+                                    ..strokeWidth = 5
+                                    ..color = primaryColor,
+                                )),
+                            Text(
+                              'Return to Home after \n${viewModel.countdownToClose} second(s)',
+                              textAlign: TextAlign.right,
+                              style: GoogleFonts.lilitaOne(
+                                fontSize: 22,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      const SizedBox(width: 12),
+                      GestureDetector(
+                        onTap: () {
+                          viewModel.onUserBackToHome();
+                        },
+                        child: Image.asset(
+                          'assets/home/close.png',
+                          width: 60,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 viewModel.lastEventType == EventType.getGift
@@ -184,6 +211,7 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+    _controller.repeat(reverse: true);
     viewModel.setController(_controller);
     viewModel.init(widget.matchId);
   }
