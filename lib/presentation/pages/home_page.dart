@@ -371,7 +371,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   QrImageView(
                     data:
-                        'https://sunny-arithmetic-f4b9c6.netlify.app/#/login?match_id=${viewModel.getUUID()}',
+                        'https://otsv-xmas.netlify.app/#/login?match_id=${viewModel.getUUID()}',
                     size: 220,
                   )
                 ],
