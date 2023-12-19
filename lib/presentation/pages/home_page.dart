@@ -300,10 +300,11 @@ class _HomePageState extends State<HomePage>
     );
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       viewModel.loaded();
-      viewModel.watch(onEvent: () {
-        if (_ctxPopup != null) Navigator.pop(_ctxPopup!);
-        AppRouter.router
+      viewModel.watch(onEvent: () async{
+        await AppRouter.router
             .navigateTo(context, '/web-game-play?match_id=${viewModel.uuid}');
+        if (_ctxPopup != null) Navigator.pop(_ctxPopup!);
+
       });
       _lightController.repeat();
     });
@@ -382,7 +383,6 @@ class _HomePageState extends State<HomePage>
       },
     );
     viewModel.getUUID();
-
   }
 
   @override
