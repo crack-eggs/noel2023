@@ -332,8 +332,8 @@ class _HomePageState extends State<HomePage>
 
   BuildContext? _ctxPopup;
 
-  void showQrCode() {
-    showDialog(
+  void showQrCode()async{
+    await showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext ctx) {
@@ -342,6 +342,7 @@ class _HomePageState extends State<HomePage>
           backgroundColor: Colors.transparent,
           child: GestureDetector(
             onTap: () {
+              print('_HomePageState.showQrCode');
               Navigator.pop(ctx);
             },
             child: Container(
@@ -380,6 +381,8 @@ class _HomePageState extends State<HomePage>
         );
       },
     );
+    viewModel.getUUID();
+
   }
 
   @override
