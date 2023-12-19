@@ -363,7 +363,7 @@ class _HomePageState extends State<HomePage>
                   const Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Text(
-                      'To verify yourself\nPlease scan this QR code with your phone',
+                      'Hi!\nPlease scan this QR code to join the game!',
                       style: TextStyle(fontSize: 30),
                     ),
                   ),
