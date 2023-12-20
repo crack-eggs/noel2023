@@ -54,7 +54,7 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
                             Tween(begin: -0.02, end: 0.02).animate(_controller),
                         alignment: Alignment.bottomCenter,
                         child: Image.asset(
-                          randomEggPath(),
+                          'assets/home/egg_center_1.png',
                           height: 500,
                           fit: BoxFit.fitHeight,
                         ),
@@ -106,7 +106,7 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
-                                'assets/home/thong4x.png',
+                                'assets/home/caythong.png',
                                 height: 250,
                                 fit: BoxFit.fitHeight,
                               ),
