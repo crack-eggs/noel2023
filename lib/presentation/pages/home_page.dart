@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:noel/service/sound_service.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:rive/rive.dart';
 import 'package:tiengviet/tiengviet.dart';
@@ -92,6 +94,8 @@ class _HomePageState extends State<HomePage>
                                 : 20),
                     child: GestureDetector(
                       onTap: () async {
+                        SoundService().webBackgroundPlayer.seek(Duration.zero);
+                        SoundService().webBackgroundPlayer.play();
                         viewModel
                             .changeSizeButton(WebHomeProvider.btnSmallSize);
                         await Future.delayed(const Duration(milliseconds: 100));
@@ -123,15 +127,20 @@ class _HomePageState extends State<HomePage>
                 Positioned(
                   right: MediaQuery.of(context).size.width / 25,
                   top: 40,
-                  child: GestureDetector(
-                    onTap: () {
-                      showTutorial();
-                    },
-                    child: SvgPicture.asset(
-                      'assets/home/tutorial.svg',
-                      fit: BoxFit.fitWidth,
-                      width: 40,
-                    ),
+                  child: Row(
+                    children: [
+                      ControlButtons(SoundService().webBackgroundPlayer),
+                      GestureDetector(
+                        onTap: () {
+                          showTutorial();
+                        },
+                        child: SvgPicture.asset(
+                          'assets/home/tutorial.svg',
+                          fit: BoxFit.fitWidth,
+                          width: 40,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 if (viewModel.settings != null)
@@ -300,11 +309,11 @@ class _HomePageState extends State<HomePage>
     );
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       viewModel.loaded();
-      viewModel.watch(onEvent: () async{
+      viewModel.watch(onEvent: () async {
+        SoundService().webBackgroundPlayer.stop();
         await AppRouter.router
             .navigateTo(context, '/web-game-play?match_id=${viewModel.uuid}');
         if (_ctxPopup != null) Navigator.pop(_ctxPopup!);
-
       });
       _lightController.repeat();
     });
@@ -333,7 +342,7 @@ class _HomePageState extends State<HomePage>
 
   BuildContext? _ctxPopup;
 
-  void showQrCode()async{
+  void showQrCode() async {
     await showDialog(
       context: context,
       barrierDismissible: true,
@@ -390,5 +399,73 @@ class _HomePageState extends State<HomePage>
     _lightController.dispose();
     viewModel.dispose();
     super.dispose();
+  }
+}
+
+/// Displays the play/pause button and volume/speed sliders.
+class ControlButtons extends StatelessWidget {
+  final AudioPlayer player;
+
+  const ControlButtons(this.player, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        /// This StreamBuilder rebuilds whenever the player state changes, which
+        /// includes the playing/paused state and also the
+        /// loading/buffering/ready state. Depending on the state we show the
+        /// appropriate button or loading indicator.
+        StreamBuilder<PlayerState>(
+          stream: player.playerStateStream,
+          builder: (context, snapshot) {
+            final playerState = snapshot.data;
+            final processingState = playerState?.processingState;
+            final playing = playerState?.playing;
+            print('ControlButtons.build');
+
+            if (processingState == ProcessingState.loading ||
+                processingState == ProcessingState.buffering) {
+              return Container(
+                margin: const EdgeInsets.all(8.0),
+                width: 50.0,
+                height: 50.0,
+                child: const CircularProgressIndicator(),
+              );
+            } else if (playing != true) {
+              return IconButton(
+                icon: Icon(
+                  Icons.play_arrow_outlined,
+                  color: Colors.yellow[600],
+                ),
+                iconSize: 50,
+                onPressed: player.play,
+              );
+            } else if (processingState != ProcessingState.completed) {
+              return IconButton(
+                icon: Icon(
+                  Icons.pause,
+                  color: Colors.yellow[600],
+                ),
+                iconSize: 50,
+                onPressed: player.pause,
+              );
+            } else {
+
+              return IconButton(
+                icon: Icon(
+                  Icons.replay,
+                  color: Colors.yellow[600],
+                ),
+                iconSize: 50.0,
+                onPressed: () => player.seek(Duration.zero),
+              );
+            }
+          },
+        ),
+        // Opens speed slider dialog
+      ],
+    );
   }
 }

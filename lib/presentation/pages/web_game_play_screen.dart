@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../constants.dart';
 import '../../enums.dart';
+import '../../service/sound_service.dart';
 import '../provider/web_game_provider.dart';
 import '../shared/base_view.dart';
 
@@ -199,6 +200,7 @@ class _WebGamePlayScreenState extends State<WebGamePlayScreen>
 
   @override
   void onVMReady(WebGameProvider viewModel, BuildContext context) {
+    SoundService().webBackgroundPlayer.play();
     viewModel.pop = () {
       Navigator.pop(context);
     };

@@ -11,16 +11,23 @@ class SoundService {
     playSoundBackground();
   }
 
-  final player = AudioPlayer();
+  final webBackgroundPlayer = AudioPlayer();
+  final receiveGiftPlayer = AudioPlayer();
+  final tapPlayer = AudioPlayer();
 
   void playSoundBackground() async {
     if (!isWebMobile) {
       try {
-        await player.setUrl('https://jmp.sh/s/H1CHOalqpMWg8HhaCKdA');
+        Future.wait([
+          webBackgroundPlayer.setUrl(
+              'https://otsv-xmas.netlify.app/sounds/web_background.mp3'),
+          receiveGiftPlayer
+              .setUrl('https://otsv-xmas.netlify.app/sounds/receive_gift.mp3'),
+          tapPlayer.setUrl('https://otsv-xmas.netlify.app/sounds/tap.mp3'),
+        ]);
       } catch (e) {
         print('SoundService.playSoundBackground error: $e');
       }
-      player.play();
     }
   }
 }
