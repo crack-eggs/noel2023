@@ -11,6 +11,7 @@ import 'package:noel/route.dart';
 import 'package:noel/service/app_settings_service.dart';
 import 'package:noel/service/event_in_app.dart';
 import 'package:noel/service/realtime_service.dart';
+import 'package:noel/service/sound_service.dart';
 import 'package:noel/service/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -31,8 +32,10 @@ final dio = Dio(
 );
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   print('main');
-  dio.interceptors.add(DioLogInterceptor());
+  SoundService();
+  // dio.interceptors.add(DioLogInterceptor());
 
   await googleSignIn.initWithParams(const SignInInitParameters(
     clientId:
