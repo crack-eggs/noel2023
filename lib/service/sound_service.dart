@@ -23,7 +23,7 @@ class SoundService {
               'https://otsv-xmas.netlify.app/sounds/web_background.mp3'),
           receiveGiftPlayer
               .setUrl('https://otsv-xmas.netlify.app/sounds/receive_gift.mp3'),
-          tapPlayer.setUrl('https://otsv-xmas.netlify.app/sounds/tap.mp3'),
+          tapPlayer.setUrl('https://otsv-xmas.netlify.app/sounds/tab.mp3'),
         ]);
       } catch (e) {
         print('SoundService.playSoundBackground error: $e');
