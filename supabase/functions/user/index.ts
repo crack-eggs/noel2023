@@ -62,9 +62,10 @@ Deno.serve(async (req) => {
     const nowClient = parts[1];
     var currentDate = new Date();
     var timeServe = currentDate.getTime() * 1000;
+
     // compare nowClient and timeServe
 
-    // if ( timeServe - 3000 > parseInt(nowClient) ) return handleError('Nghi vấn hack: timeServe')
+    if (timeServe - 3000000 > parseInt(nowClient)) return handleError('Nghi vấn hack: timeServe')
     const idCode = parts[2];
     let body;
     let validator;

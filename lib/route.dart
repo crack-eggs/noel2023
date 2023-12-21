@@ -14,7 +14,7 @@ class AppRouter {
   static void setupRouter() {
     // Define your routes here
     router.define(
-      '/',
+      '/v1',
       handler: Handler(
         handlerFunc: (BuildContext? context, Map<String, dynamic> params) {
           // Return the widget you want to display for this route

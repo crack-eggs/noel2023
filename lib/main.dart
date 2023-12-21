@@ -35,7 +35,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print('main');
   SoundService();
-  // dio.interceptors.add(DioLogInterceptor());
+  dio.interceptors.add(DioLogInterceptor());
 
   await googleSignIn.initWithParams(const SignInInitParameters(
     clientId:
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
         // initialRoute: '/login?match_id=${const Uuid().v4()}',
         // home: !isWebMobile ? Container() : const HomePage(),
 
-        home: isWebMobile ? Container() : const HomePage(),
+        home: Container(),
         builder: (context, widget) {
           Widget error = const Text('...rendering error...');
           if (widget is Scaffold || widget is Navigator) {
