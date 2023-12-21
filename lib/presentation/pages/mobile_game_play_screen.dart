@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:noel/enums.dart';
 import 'package:noel/service/sound_service.dart';
 import 'package:noel/utils/toast.dart';
@@ -165,19 +166,22 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        GestureDetector(
-          onTap: () {
-            SoundService().tapPlayer
-              ..seek(Duration.zero)
-              ..play();
-            viewModel.onUserTap(onFailure: (String error) {
-              AppToast.showError(error);
-            });
+        StreamBuilder<PlayerState>(
+          stream: SoundService().tapPlayer.playerStateStream,
+          builder: (context, snapshot) {
+            return GestureDetector(
+              onTap: () {
+                SoundService().tapPlayer.play();
+                viewModel.onUserTap(onFailure: (String error) {
+                  AppToast.showError(error);
+                });
+              },
+              child: Image.asset(
+                'assets/mobile/btn_default.png',
+                width: MediaQuery.of(context).size.width / 4,
+              ),
+            );
           },
-          child: Image.asset(
-            'assets/mobile/btn_default.png',
-            width: MediaQuery.of(context).size.width / 4,
-          ),
         ),
         GestureDetector(
           onTap: () {
