@@ -4,11 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:noel/service/sound_service.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:rive/rive.dart';
 import 'package:tiengviet/tiengviet.dart';
 
 import '../../constants.dart';
-import '../../enums.dart';
 import '../../route.dart';
 import '../provider/web_home_provider.dart';
 import '../shared/base_view.dart';

@@ -9,6 +9,7 @@ import '../../domain/usecases/user_usecase.dart';
 import '../../enums.dart';
 import '../../service/event_in_app.dart';
 import '../../service/navigator_service.dart';
+import '../../service/sound_service.dart';
 import '../../service/user_service.dart';
 import '../shared/base_view_model.dart';
 
@@ -44,6 +45,9 @@ class MobileGameProvider extends BaseViewModel {
   }
 
   Future<void> onUserGetGift() async {
+    SoundService().receiveGiftPlayer
+      ..seek(Duration.zero)
+      ..play();
     final random = Random().nextInt(100) + 1;
     final jackpotRange =
         ((AppSettings().settings?.jackpot ?? 0) / 3).round() + 1;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:noel/enums.dart';
+import 'package:noel/service/sound_service.dart';
 import 'package:noel/utils/toast.dart';
 import 'package:tiengviet/tiengviet.dart';
 
@@ -166,6 +167,9 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
       children: [
         GestureDetector(
           onTap: () {
+            SoundService().tapPlayer
+              ..seek(Duration.zero)
+              ..play();
             viewModel.onUserTap(onFailure: (String error) {
               AppToast.showError(error);
             });
@@ -177,6 +181,9 @@ class _MobileGamePlayScreenState extends State<MobileGamePlayScreen>
         ),
         GestureDetector(
           onTap: () {
+            SoundService().tapPlayer
+              ..seek(Duration.zero)
+              ..play();
             viewModel.onUserTap(onFailure: (String error) {
               AppToast.showError(error);
             });
