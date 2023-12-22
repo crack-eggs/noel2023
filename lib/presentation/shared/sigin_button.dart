@@ -38,7 +38,6 @@ class _ButtonConfiguratorState extends State<ButtonConfiguratorDemo> {
     });
   }
 
-
   Widget _buildBody() {
     return Row(
       children: <Widget>[
@@ -46,15 +45,8 @@ class _ButtonConfiguratorState extends State<ButtonConfiguratorDemo> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              if (_userData == null)
-                googleSignIn.renderButton(configuration: GSIButtonConfiguration()),
-              if (_userData != null) ...<Widget>[
-                Text('Hello, ${_userData!.displayName}!'),
-                ElevatedButton(
-                  onPressed: _handleSignOut,
-                  child: const Text('SIGN OUT'),
-                ),
-              ]
+              googleSignIn.renderButton(
+                  configuration: GSIButtonConfiguration()),
             ],
           ),
         ),

@@ -14,6 +14,7 @@ import 'package:noel/service/realtime_service.dart';
 import 'package:noel/service/sound_service.dart';
 import 'package:noel/service/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import 'constants.dart';
 import 'di/injection.dart';
@@ -65,8 +66,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: primaryColor,
         ),
-        // initialRoute: '/login?match_id=${const Uuid().v4()}',
-        home: isWebMobile ? Container() : const HomePage(),
+        initialRoute: '/login?match_id=${const Uuid().v4()}',
+        home: !isWebMobile ? Container() : const HomePage(),
 
         // home: Container(),
         builder: (context, widget) {
