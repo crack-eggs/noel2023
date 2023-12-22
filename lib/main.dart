@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:dio_log/interceptor/dio_log_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
-import 'package:noel/presentation/pages/home_page.dart';
 
 import 'package:noel/route.dart';
 import 'package:noel/service/app_settings_service.dart';
@@ -14,7 +13,6 @@ import 'package:noel/service/realtime_service.dart';
 import 'package:noel/service/sound_service.dart';
 import 'package:noel/service/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 import 'constants.dart';
 import 'di/injection.dart';

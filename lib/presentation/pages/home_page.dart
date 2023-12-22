@@ -312,7 +312,6 @@ class _HomePageState extends State<HomePage>
 
         await AppRouter.router
             .navigateTo(context, '/web-game-play?match_id=${viewModel.uuid}');
-
       });
       _lightController.repeat();
     });
@@ -371,7 +370,7 @@ class _HomePageState extends State<HomePage>
                   const Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Text(
-                      'Hi!\nPlease scan this QR code to join the game!',
+                      'Hi!\nPlease scan this QR code to join the game!\n\nNote: The game supports only one player at a time\nPlease wait for the next turn.\nThank you',
                       style: TextStyle(fontSize: 30),
                     ),
                   ),
@@ -451,7 +450,6 @@ class ControlButtons extends StatelessWidget {
                 onPressed: player.pause,
               );
             } else {
-
               return IconButton(
                 icon: Icon(
                   Icons.replay,
