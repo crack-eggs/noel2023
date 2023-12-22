@@ -30,14 +30,6 @@ class _ButtonConfiguratorState extends State<ButtonConfiguratorDemo> {
     });
   }
 
-  void _handleSignOut() {
-    googleSignIn.signOut();
-    setState(() {
-      // signOut does not broadcast through the userDataEvents, so we fake it.
-      _userData = null;
-    });
-  }
-
   Widget _buildBody() {
     return Row(
       children: <Widget>[
@@ -45,6 +37,7 @@ class _ButtonConfiguratorState extends State<ButtonConfiguratorDemo> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Text("hi"),
               googleSignIn.renderButton(
                   configuration: GSIButtonConfiguration()),
             ],
