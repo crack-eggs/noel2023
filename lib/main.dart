@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_log/interceptor/dio_log_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import 'package:noel/presentation/pages/home_page.dart';
 
 import 'package:noel/route.dart';
 import 'package:noel/service/app_settings_service.dart';
@@ -64,11 +65,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: primaryColor,
         ),
-        initialRoute: '/',
+        // initialRoute: '/',
         // initialRoute: '/login?match_id=${const Uuid().v4()}',
-        // home: !isWebMobile ? Container() : const HomePage(),
+        home: !isWebMobile ? Container() : const HomePage(),
 
-        home: Container(),
+        // home: Container(),
         builder: (context, widget) {
           Widget error = const Text('...rendering error...');
           if (widget is Scaffold || widget is Navigator) {
