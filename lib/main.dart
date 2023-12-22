@@ -65,9 +65,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: primaryColor,
         ),
-        initialRoute: '/',
         // initialRoute: '/login?match_id=${const Uuid().v4()}',
-        home: !isWebMobile ? Container() : const HomePage(),
+        home: isWebMobile ? Container() : const HomePage(),
 
         // home: Container(),
         builder: (context, widget) {
